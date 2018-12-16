@@ -1,0 +1,14 @@
+{
+	"number-of-cards": 3,
+
+	"assets":
+	{
+		"card-back": { "id": "back", "name": "back.png" },
+		"cards": 
+		[
+			{ "id": "plane", "name": "plane.png" },
+			{ "id": "planeO", "name": "planeO.png" },
+			{ "id": "planeX", "name": "planeX.png" }
+		]
+	}
+}

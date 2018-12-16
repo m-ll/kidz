@@ -1,0 +1,37 @@
+{
+	"number-of-cards": 4,
+
+	"assets":
+	{
+		"card-back": { "id": "back", "name": "back.png" },
+		"cards": 
+		[
+			{ "id": "lower-a", "name": "lower-a.png" },
+			{ "id": "lower-b", "name": "lower-b.png" },
+			{ "id": "lower-c", "name": "lower-c.png" },
+			{ "id": "lower-d", "name": "lower-d.png" },
+			{ "id": "lower-e", "name": "lower-e.png" },
+			{ "id": "lower-f", "name": "lower-f.png" },
+			{ "id": "lower-g", "name": "lower-g.png" },
+			{ "id": "lower-h", "name": "lower-h.png" },
+			{ "id": "lower-i", "name": "lower-i.png" },
+			{ "id": "lower-j", "name": "lower-j.png" },
+			{ "id": "lower-k", "name": "lower-k.png" },
+			{ "id": "lower-l", "name": "lower-l.png" },
+			{ "id": "lower-m", "name": "lower-m.png" },
+			{ "id": "lower-n", "name": "lower-n.png" },
+			{ "id": "lower-o", "name": "lower-o.png" },
+			{ "id": "lower-p", "name": "lower-p.png" },
+			{ "id": "lower-q", "name": "lower-q.png" },
+			{ "id": "lower-r", "name": "lower-r.png" },
+			{ "id": "lower-s", "name": "lower-s.png" },
+			{ "id": "lower-t", "name": "lower-t.png" },
+			{ "id": "lower-u", "name": "lower-u.png" },
+			{ "id": "lower-v", "name": "lower-v.png" },
+			{ "id": "lower-w", "name": "lower-w.png" },
+			{ "id": "lower-x", "name": "lower-x.png" },
+			{ "id": "lower-y", "name": "lower-y.png" },
+			{ "id": "lower-z", "name": "lower-z.png" }
+		]
+	}
+}
