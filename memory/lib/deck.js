@@ -49,11 +49,6 @@ class cCard
 	{
 		switch( iState )
 		{
-			case cCard.eState.kHidden:
-			case cCard.eState.kTry:
-				this.mGFace.cursor = 'pointer';
-				this.mGBack.cursor = 'pointer';
-				break;
 			case cCard.eState.kFound:
 				this.mGFace.filters = [new createjs.ColorFilter( 1, 1, 1, 1, 100, 100, 100, 0 )];
 				var bounds = this.mGFace.getBounds();
@@ -73,7 +68,6 @@ class cCard
 		this.mGFace = iGFace;
 		this.mGBack = iGBack;
 		
-		this.mGFace.cursor = 'pointer';
 		this.mGBack.cursor = 'pointer';
 	}
 }
