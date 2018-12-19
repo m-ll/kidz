@@ -8,19 +8,15 @@
 /// 29c355784a3921aa290371da87bce9c1617b8584ca6ac6fb17fb37ba4a07d191
 ///
 
-this.kidz = this.kidz||{};
+this.kidz = this.kidz || {};
 
-(function() {
-	"use strict";
+(function()
+{
+"use strict";
 
-	cCard.eState = {
-		kHidden: 'hidden',
-		kFound: 'found',
-		kTry: 'try'
-	}
-	
-// constructor
-	function cCard( iName )
+class cCard
+{
+	constructor( iName )
 	{
 		this.mId = createjs.UID.get() * 7;
 		this.mName = iName;
@@ -29,23 +25,27 @@ this.kidz = this.kidz||{};
 		this.mGBack = null;
 	}
 	
-	var p = cCard.prototype;
+// public
+	static get eState()
+	{
+		return { kHidden: 'hidden', kFound: 'found', kTry: 'try' };
+	}
 	
 // public
-	p.GetId = function()
+	GetId()
 	{
 		return this.mId;
-	};
-	p.GetName = function()
+	}
+	GetName()
 	{
 		return this.mName;
-	};
+	}
 
-	p.GetState = function()
+	GetState()
 	{
 		return this.mState;
-	};
-	p.SetState = function( iState )
+	}
+	SetState( iState )
 	{
 		switch( iState )
 		{
@@ -62,43 +62,37 @@ this.kidz = this.kidz||{};
 		}
 		
 		this.mState = iState;
-	};
+	}
 
-	p.GetImage = function()
+	GetImage()
 	{
 		return ( this.mState === cCard.eState.kHidden ) ? this.mGBack : this.mGFace;
-	};
-	p.SetImage = function( iGFace, iGBack )
+	}
+	SetImage( iGFace, iGBack )
 	{
 		this.mGFace = iGFace;
 		this.mGBack = iGBack;
 		
 		this.mGFace.cursor = 'pointer';
 		this.mGBack.cursor = 'pointer';
-	};
-	
-// 
-	kidz.cCard = cCard;
+	}
+}
+
+// module
+kidz.cCard = cCard;
 }());
 
 //---
 
-this.kidz = this.kidz||{};
+this.kidz = this.kidz || {};
 
-(function() {
-	"use strict";
+(function()
+{
+"use strict";
 
-	cDeck.eState = {
-		kIdle: 'idle',
-		kTry: 'try',
-		kTest: 'test',
-		kBeginWait: 'begin-wait',
-		kEndWait: 'end-wait',
-		kWin: 'win'
-	}
-	
-// constructor
-	function cDeck() // https://crockford.com/javascript/private.html
+class cDeck
+{
+	constructor()
 	{
 		this.mCards = [];
 		this.mGBack = null;
@@ -106,24 +100,35 @@ this.kidz = this.kidz||{};
 		this.mState = cDeck.eState.kIdle;
 	}
 	
-	var p = cDeck.prototype;
-	
 // public
-	p.GetCards = function()
+	static get eState()
+	{
+		return {
+				kIdle: 'idle',
+				kTry: 'try',
+				kTest: 'test',
+				kBeginWait: 'begin-wait',
+				kEndWait: 'end-wait',
+				kWin: 'win'
+				};
+	}
+
+// public
+	GetCards()
 	{
 		return this.mCards;
-	};
+	}
 
-	p.GetState = function()
+	GetState()
 	{
 		return this.mState;
-	};
-	p.SetState = function( iState )
+	}
+	SetState( iState )
 	{
 		this.mState = iState;
-	};
+	}
 	
-	p.Init = function( iAssets, iNumber )
+	Init( iAssets, iNumber )
 	{
 		var cards = Array.from( Array( iAssets.GetGCards().length ).keys() );
 		// var cards = iAssets.GetGCards();
@@ -147,14 +152,14 @@ this.kidz = this.kidz||{};
 		}
 
 		this._Shuffle();
-	};
+	}
 	
-	p.Win = function()
+	Win()
 	{
 		return this.mCards.every( iCard => iCard.GetState() === kidz.cCard.eState.kFound );
-	};
+	}
 	
-	p.Check = function()
+	Check()
 	{
 		// Every cards to test
 		var cards = this.mCards.filter( iCard => iCard.GetState() === kidz.cCard.eState.kTry );
@@ -168,9 +173,9 @@ this.kidz = this.kidz||{};
 			return true
 		
 		return false;
-	};
+	}
 	
-	p.Process = function()
+	Process()
 	{
 		var new_state = this.Check() ? kidz.cCard.eState.kFound : kidz.cCard.eState.kHidden;
 		
@@ -180,10 +185,10 @@ this.kidz = this.kidz||{};
 			if( iCard.GetState() === kidz.cCard.eState.kTry )
 				iCard.SetState( new_state );
 		});
-	};
+	}
 	
 // private
-	p._Shuffle = function()
+	_Shuffle()
 	{
 		for( var i = this.mCards.length - 1; i > 0; i-- )
 		{
@@ -193,8 +198,9 @@ this.kidz = this.kidz||{};
 			this.mCards[i] = this.mCards[j];
 			this.mCards[j] = x;
 		}
-	};
-	
-// 
-	kidz.cDeck = cDeck;
+	}
+}
+
+// module
+kidz.cDeck = cDeck;
 }());

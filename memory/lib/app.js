@@ -8,13 +8,15 @@
 /// 29c355784a3921aa290371da87bce9c1617b8584ca6ac6fb17fb37ba4a07d191
 ///
 
-this.kidz = this.kidz||{};
+this.kidz = this.kidz || {};
 
-(function() {
-	"use strict";
+(function()
+{
+"use strict";
 
-// constructor
-	function cApp()
+class cApp
+{
+	constructor()
 	{
 		this.mStage = null;
 		this.mAssets = null;
@@ -22,10 +24,8 @@ this.kidz = this.kidz||{};
 		this.mConfig = null;
 	}
 	
-	var p = cApp.prototype;
-	
 // public
-	p.Init = function( iConfig )
+	Init( iConfig )
 	{
 		this.mConfig = iConfig;
 
@@ -33,48 +33,49 @@ this.kidz = this.kidz||{};
 		this.mStage.enableMouseOver();
 		
 		createjs.Touch.enable( this.mStage );
-	};
+	}
 	
-	p.Start = function()
+	Start()
 	{
 		var presentation = new kidz.cPresentation( this.mStage, this.mAssets, this._Assets, this );
 		presentation.Init();
 		presentation.Build();
 		presentation.Start();
-	};
+	}
 	
 // private
-	p._Assets = function()
+	_Assets()
 	{
 		this.mAssets = new kidz.cAssets( this.mStage, this._Menu, this );
 		this.mAssets.Load( this.mConfig['assets'] );
-	};
+	}
 	
-	p._Menu = function()
+	_Menu()
 	{
 		this._Game();
-		// var menu = new kidz.cPresentation( this.mStage, this.mAssets, this.Game, this );
+		// var menu = new kidz.cMenu( this.mStage, this.mAssets, this._Game, this );
 		// menu.Init();
 		// menu.Build();
 		// menu.Start();
-	};
+	}
 	
-	p._Game = function()
+	_Game()
 	{
 		var game = new kidz.cGame( this.mStage, this.mAssets, this._Win, this );
 		game.Init();
 		game.Build( this.mConfig['number-of-cards'] );
 		game.Start();
-	};
+	}
 
-	p._Win = function()
+	_Win()
 	{
 		var win = new kidz.cWin( this.mStage, this.mAssets, this._Game, this );
 		win.Init();
 		win.Build();
 		win.Start();
-	};
+	}
+}
 
-// 
-	kidz.cApp = cApp;
+// module
+kidz.cApp = cApp;
 }());

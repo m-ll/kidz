@@ -8,13 +8,15 @@
 /// 29c355784a3921aa290371da87bce9c1617b8584ca6ac6fb17fb37ba4a07d191
 ///
 
-this.kidz = this.kidz||{};
+this.kidz = this.kidz || {};
 
-(function() {
-	"use strict";
+(function()
+{
+"use strict";
 
-// constructor
-	function cGame( iStage, iAssets, iNextCB, iNextCBData )
+class cGame
+{
+	constructor( iStage, iAssets, iNextCB, iNextCBData )
 	{
 		this.mStage = iStage;
 		this.mAssets = iAssets;
@@ -27,43 +29,43 @@ this.kidz = this.kidz||{};
 		this.mListener = null;
 	}
 	
-	var p = cGame.prototype;
-	
 // public
-	p.Init = function()
+	Init()
 	{
-	};
+	}
 	
-	p.Build = function( iNumberOfCards )
+	Build( iNumberOfCards )
 	{
 		this.mDeck = new kidz.cDeck();
 		this.mDeck.Init( this.mAssets, iNumberOfCards );
 
+		var t = this.mDeck.GetCards()[0];
+		t.GetState();
 		this.mDeck.GetCards().forEach( iCard => 
 		{
 			iCard.GetImage().on( 'click', this._CardClicked, null, false, [this, iCard] );
 		});
 
 		this._Refresh();
-	};
+	}
 	
-	p.Start = function()
+	Start()
 	{
 		createjs.Ticker.timingMode = createjs.Ticker.RAF;
 		this.mListener = createjs.Ticker.on( 'tick', this._Tick, null, false, this );
-	};
+	}
 	
 // private
-	p._Stop = function()
+	_Stop()
 	{
 		// It's commented to keep all cards displayed during the win screen
 		// this.mStage.removeAllChildren();
 
 		createjs.Ticker.off( 'tick', this.mListener );
 		this.mNextCB.call( this.mNextCBData );
-	};
+	}
 	
-	p._Refresh = function()
+	_Refresh()
 	{
 		this.mStage.removeAllChildren();
 
@@ -71,9 +73,9 @@ this.kidz = this.kidz||{};
 
 		var cards = this.mDeck.GetCards();
 		cards.forEach( iCard => this.mStage.addChild( iCard.GetImage() ) );
-	};
+	}
 	
-	p._PlaceCards = function()
+	_PlaceCards()
 	{
 		var cards = this.mDeck.GetCards();
 		var img0 = cards[0].GetImage();
@@ -100,11 +102,11 @@ this.kidz = this.kidz||{};
 
 			x += img.getBounds().width + 20;
 		});
-	};
+	}
 
 	//---
 	
-	p._CardClicked = function( iEvent, iData )
+	_CardClicked( iEvent, iData )
 	{
 		var that = iData[0];
 		var card = iData[1];
@@ -140,9 +142,9 @@ this.kidz = this.kidz||{};
 			// case kidz.cDeck.eState.kEndWait:
 			// 	break;
 		}
-	};
+	}
 	
-	p._Tick = function( iEvent, iData )
+	_Tick( iEvent, iData )
 	{
 		var that = iData;
 
@@ -183,8 +185,9 @@ this.kidz = this.kidz||{};
 		}
 		
 		that.mStage.update( iEvent );
-	};
-	
-// 
-	kidz.cGame = cGame;
+	}
+}
+
+// module
+kidz.cGame = cGame;
 }());

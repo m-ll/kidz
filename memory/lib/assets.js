@@ -8,13 +8,15 @@
 /// 29c355784a3921aa290371da87bce9c1617b8584ca6ac6fb17fb37ba4a07d191
 ///
 
-this.kidz = this.kidz||{};
+this.kidz = this.kidz || {};
 
-(function() {
-	"use strict";
+(function()
+{
+"use strict";
 
-// constructor
-	function cAssets( iStage, iNextCB, iNextCBData )
+class cAssets
+{
+	constructor( iStage, iNextCB, iNextCBData )
 	{
 		this.mStage = iStage;
 		this.mNextCB = iNextCB;
@@ -26,34 +28,32 @@ this.kidz = this.kidz||{};
 		this.mGCards = [];
 	}
 	
-	var p = cAssets.prototype;
-	
 // public
-	p.GetGBack = function()
+	GetGBack()
 	{
 		return this.mGBack;
-	};
-	p.GetGCards = function()
+	}
+	GetGCards()
 	{
 		return this.mGCards;
-	};
+	}
 	
-	p.Load = function( iConfig )
+	Load( iConfig )
 	{
 		this.mConfig = iConfig;
 		this._LoadBack();
-	};
+	}
 
 // private
-	p._LoadBack = function()
+	_LoadBack()
 	{
 		var that = this;
 		
 		var loader = new createjs.LoadQueue( false );
 		loader.on( 'complete', that._BuildBack, null, false, that );
 		loader.loadFile( { 'id': that.mConfig['card-back']['id'], 'src': that.mConfig['card-back']['name'] }, true, 'assets/' );
-	};
-	p._BuildBack = function( iEvent, iData )
+	}
+	_BuildBack( iEvent, iData )
 	{
 		var loader = iEvent.target;
 		var that = iData;
@@ -76,9 +76,9 @@ this.kidz = this.kidz||{};
 		//---
 		
 		that._LoadCards( iEvent, iData );
-	};
+	}
 	
-	p._LoadCards = function( iEvent, iData )
+	_LoadCards( iEvent, iData )
 	{
 		var that = iData;
 		
@@ -92,8 +92,8 @@ this.kidz = this.kidz||{};
 		loader.on( 'complete', that._Finish, null, false, that );
 		loader.on( 'fileload', that._BuildCard, null, false, that );
 		loader.loadManifest( manifest, true, 'assets/' );
-	};
-	p._BuildCard = function( iEvent, iData )
+	}
+	_BuildCard( iEvent, iData )
 	{
 		var loader = iEvent.target;
 		var that = iData;
@@ -126,9 +126,9 @@ this.kidz = this.kidz||{};
 
 		that.mStage.addChild( gtext );
 		that.mStage.update( iEvent );
-	};
+	}
 
-	p._Finish = function( iEvent, iData )
+	_Finish( iEvent, iData )
 	{
 		var that = iData;
 		
@@ -136,8 +136,9 @@ this.kidz = this.kidz||{};
 
 		that.mStage.removeAllChildren();
 		that.mNextCB.call( that.mNextCBData );
-	};
-	
-// 
-	kidz.cAssets = cAssets;
+	}
+}
+
+// module
+kidz.cAssets = cAssets;
 }());

@@ -8,13 +8,15 @@
 /// 29c355784a3921aa290371da87bce9c1617b8584ca6ac6fb17fb37ba4a07d191
 ///
 
-this.kidz = this.kidz||{};
+this.kidz = this.kidz || {};
 
-(function() {
-	"use strict";
+(function()
+{
+"use strict";
 
-// constructor
-	function cPresentation( iStage, iAssets, iNextCB, iNextCBData )
+class cPresentation
+{
+	constructor( iStage, iAssets, iNextCB, iNextCBData )
 	{
 		this.mStage = iStage;
 		this.mAssets = iAssets;
@@ -25,14 +27,12 @@ this.kidz = this.kidz||{};
 		this.mListener = null;
 	}
 	
-	var p = cPresentation.prototype;
-	
 // public
-	p.Init = function()
+	Init()
 	{
-	};
+	}
 	
-	p.Build = function()
+	Build()
 	{
 		this.mGText = new createjs.Text( 'Welcome ...', 'bold 20px Arial', '#000000' );
 		// this.mGText.maxWidth = 1000;
@@ -42,22 +42,22 @@ this.kidz = this.kidz||{};
 		this.mGText.y = 0; //this.mStage.canvas.height / 2;
 
 		this.mStage.addChild( this.mGText );
-	};
+	}
 	
-	p.Start = function()
+	Start()
 	{
 		createjs.Ticker.timingMode = createjs.Ticker.RAF;
 		this.mListener = createjs.Ticker.on( 'tick', this._Tick, null, false, this );
-	};
+	}
 	
 // private
-	p._Stop = function()
+	_Stop()
 	{
 		createjs.Ticker.off( 'tick', this.mListener );
 		this.mNextCB.call( this.mNextCBData );
-	};
+	}
 	
-	p._Tick = function( iEvent, iData )
+	_Tick( iEvent, iData )
 	{
 		var that = iData;
 		
@@ -72,8 +72,9 @@ this.kidz = this.kidz||{};
 		}
 
 		that.mStage.update( iEvent );
-	};
-	
-// 
-	kidz.cPresentation = cPresentation;
+	}
+}
+
+// module
+kidz.cPresentation = cPresentation;
 }());

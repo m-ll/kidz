@@ -8,13 +8,15 @@
 /// 29c355784a3921aa290371da87bce9c1617b8584ca6ac6fb17fb37ba4a07d191
 ///
 
-this.kidz = this.kidz||{};
+this.kidz = this.kidz || {};
 
-(function() {
-	"use strict";
+(function()
+{
+"use strict";
 
-// constructor
-	function cWin( iStage, iAssets, iNextCB, iNextCBData )
+class cWin
+{
+	constructor( iStage, iAssets, iNextCB, iNextCBData )
 	{
 		this.mStage = iStage;
 		this.mAssets = iAssets;
@@ -26,14 +28,12 @@ this.kidz = this.kidz||{};
 		this.mListener = null;
 	}
 	
-	var p = cWin.prototype;
-	
 // public
-	p.Init = function()
+	Init()
 	{
-	};
+	}
 	
-	p.Build = function()
+	Build()
 	{
 		// var bg = new createjs.Shape();
 		// bg.graphics.beginFill( 'rgba( 255, 0, 0, 0.5 )' ).drawRoundRect( 0, 0, 250, 40, 10 );
@@ -71,39 +71,40 @@ this.kidz = this.kidz||{};
 		this.mGPlayAgain.cursor = 'pointer';
 
 		this.mStage.addChild( this.mGPlayAgain );
-	};
+	}
 	
-	p.Start = function()
+	Start()
 	{
 		createjs.Ticker.timingMode = createjs.Ticker.RAF;
 		this.mListener = createjs.Ticker.on( 'tick', this._Tick, null, false, this );
-	};
+	}
 	
 // private
-	p._Stop = function()
+	_Stop()
 	{
 		this.mStage.removeChild( this.mGYouWin );
 		this.mStage.removeChild( this.mGPlayAgain );
 
 		createjs.Ticker.off( 'tick', this.mListener );
 		this.mNextCB.call( this.mNextCBData );
-	};
+	}
 	
-	p._PlayAgain = function( iEvent, iData )
+	_PlayAgain( iEvent, iData )
 	{
 		var that = iData;
 		
 		iEvent.remove();
 		that._Stop();
-	};
+	}
 	
-	p._Tick = function( iEvent, iData )
+	_Tick( iEvent, iData )
 	{
 		var that = iData;
 
 		that.mStage.update( iEvent );
-	};
-	
-// 
-	kidz.cWin = cWin;
+	}
+}
+
+// module
+kidz.cWin = cWin;
 }());
