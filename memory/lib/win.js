@@ -68,6 +68,7 @@ this.kidz = this.kidz||{};
 		this.mGPlayAgain.y = this.mStage.canvas.height / 2 - 40 / 2 + 20;
 		this.mGPlayAgain.addChild( bg, gtext );
 		this.mGPlayAgain.on( 'click', this._PlayAgain, null, false, this );
+		this.mGPlayAgain.cursor = 'pointer';
 
 		this.mStage.addChild( this.mGPlayAgain );
 	};

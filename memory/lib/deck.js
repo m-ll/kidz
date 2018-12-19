@@ -47,6 +47,20 @@ this.kidz = this.kidz||{};
 	};
 	p.SetState = function( iState )
 	{
+		switch( iState )
+		{
+			case cCard.eState.kHidden:
+			case cCard.eState.kTry:
+				this.mGFace.cursor = 'pointer';
+				this.mGBack.cursor = 'pointer';
+				break;
+			case cCard.eState.kFound:
+				this.mGFace.filters = [new createjs.ColorFilter( 1, 1, 1, 1, 100, 100, 100, 0 )];
+				var bounds = this.mGFace.getBounds();
+				this.mGFace.cache( bounds.x, bounds.y, bounds.width, bounds.height );
+				break;
+		}
+		
 		this.mState = iState;
 	};
 
@@ -58,6 +72,9 @@ this.kidz = this.kidz||{};
 	{
 		this.mGFace = iGFace;
 		this.mGBack = iGBack;
+		
+		this.mGFace.cursor = 'pointer';
+		this.mGBack.cursor = 'pointer';
 	};
 	
 // 
@@ -158,7 +175,7 @@ this.kidz = this.kidz||{};
 		var new_state = this.Check() ? kidz.cCard.eState.kFound : kidz.cCard.eState.kHidden;
 		
 		// Update the state of the tested cards
-		this.mCards.forEach( function( iCard )
+		this.mCards.forEach( iCard =>
 		{
 			if( iCard.GetState() === kidz.cCard.eState.kTry )
 				iCard.SetState( new_state );

@@ -59,6 +59,8 @@ this.kidz = this.kidz||{};
 		var that = iData;
 		
 		that.mGBack = new createjs.Bitmap( loader.getResult( that.mConfig['card-back']['id'] ) );
+		var bounds = that.mGBack.getBounds();
+		that.mGBack.setBounds( bounds.x, bounds.y, bounds.width, bounds.height );
 		
 		//---
 		
@@ -81,7 +83,7 @@ this.kidz = this.kidz||{};
 		var that = iData;
 		
 		var manifest = [];
-		that.mConfig['cards'].forEach( function( iElement )
+		that.mConfig['cards'].forEach( iElement =>
 		{
 			manifest.push( { 'id': iElement['id'], 'src': iElement['name'] } );
 		});
@@ -97,7 +99,10 @@ this.kidz = this.kidz||{};
 		var that = iData;
 		var item = iEvent.item;
 		
-		that.mGCards.push( { 'id': item.id, 'image': new createjs.Bitmap( loader.getResult( item.id ) ) } );
+		var img = new createjs.Bitmap( loader.getResult( item.id ) );
+		var bounds = img.getBounds();
+		img.setBounds( bounds.x, bounds.y, bounds.width, bounds.height );
+		that.mGCards.push( { 'id': item.id, 'image': img } );
 
 		// var spriteSheet = new createjs.SpriteSheet(
 		// {

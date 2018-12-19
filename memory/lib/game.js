@@ -56,6 +56,7 @@ this.kidz = this.kidz||{};
 // private
 	p._Stop = function()
 	{
+		// It's commented to keep all cards displayed during the win screen
 		// this.mStage.removeAllChildren();
 
 		createjs.Ticker.off( 'tick', this.mListener );
@@ -69,24 +70,22 @@ this.kidz = this.kidz||{};
 		this._PlaceCards();
 
 		var cards = this.mDeck.GetCards();
-		cards.forEach( iCard => 
-		{
-			this.mStage.addChild( iCard.GetImage() );
-		});
+		cards.forEach( iCard => this.mStage.addChild( iCard.GetImage() ) );
 	};
 	
 	p._PlaceCards = function()
 	{
 		var cards = this.mDeck.GetCards();
+		var img0 = cards[0].GetImage();
 		var card_number_per_line = cards.length / 2;
-		var cards_width_per_line = cards[0].GetImage().getBounds().width * card_number_per_line;
+		var cards_width_per_line = img0.getBounds().width * card_number_per_line;
 		var cards_spaces_width_per_line = cards_width_per_line + ( card_number_per_line - 1 ) * 20;
 
 		var start_x = this.mStage.canvas.width / 2 - cards_spaces_width_per_line / 2;
 		var x = start_x;
 
 		var half_height = this.mStage.canvas.height / 2;
-		var y1 = half_height / 2 - cards[0].GetImage().getBounds().height / 2;
+		var y1 = half_height / 2 - img0.getBounds().height / 2;
 		var y2 = half_height + y1;
 
 		cards.forEach( ( iCard, iIndex ) => 
@@ -94,10 +93,12 @@ this.kidz = this.kidz||{};
 			if( !( iIndex % card_number_per_line ) )
 				x = start_x;
 			
-			iCard.GetImage().x = x;
-			iCard.GetImage().y = ( iIndex < card_number_per_line ) ? y1 : y2;
+			var img = iCard.GetImage();
+			
+			img.x = x;
+			img.y = ( iIndex < card_number_per_line ) ? y1 : y2;
 
-			x += iCard.GetImage().getBounds().width + 20;
+			x += img.getBounds().width + 20;
 		});
 	};
 
@@ -130,8 +131,12 @@ this.kidz = this.kidz||{};
 				break;
 			// case kidz.cDeck.eState.kTest:
 			// 	break;
+			// To not wait between begin/end wait
 			// case kidz.cDeck.eState.kBeginWait:
-			// 	break;
+				// that.mDeck.Process();
+				// that.mDeck.SetState( kidz.cDeck.eState.kIdle );
+				// that._CardClicked( iEvent, iData );
+				// break;
 			// case kidz.cDeck.eState.kEndWait:
 			// 	break;
 		}

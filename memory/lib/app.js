@@ -30,6 +30,8 @@ this.kidz = this.kidz||{};
 		this.mConfig = iConfig;
 
 		this.mStage = new createjs.Stage( 'canvas' );
+		this.mStage.enableMouseOver();
+		
 		createjs.Touch.enable( this.mStage );
 	};
 	
