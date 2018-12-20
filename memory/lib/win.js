@@ -35,10 +35,23 @@ class cWin
 	
 	Build()
 	{
-		// var bg = new createjs.Shape();
+		this._BuildYouWin();
+		this._BuildPlayAgain();
+	}
+	
+	Start()
+	{
+		createjs.Ticker.timingMode = createjs.Ticker.RAF;
+		this.mListener = createjs.Ticker.on( 'tick', this._Tick, null, false, this );
+	}
+	
+// private
+	_BuildYouWin()
+	{
+		// let bg = new createjs.Shape();
 		// bg.graphics.beginFill( 'rgba( 255, 0, 0, 0.5 )' ).drawRoundRect( 0, 0, 250, 40, 10 );
 
-		var gtext = new createjs.Text( 'You win !', 'bold 20px Arial', '#000000' );
+		let gtext = new createjs.Text( 'You win !', 'bold 20px Arial', '#000000' );
 		gtext.textAlign = 'center';
 		gtext.textBaseline = 'middle';
 		gtext.x = 250 / 2;
@@ -51,13 +64,13 @@ class cWin
 		this.mGYouWin.addChild( gtext );
 
 		this.mStage.addChild( this.mGYouWin );
-
-		//---
-
-		var bg = new createjs.Shape();
+	}
+	_BuildPlayAgain()
+	{
+		let bg = new createjs.Shape();
 		bg.graphics.beginFill( 'rgba( 255, 0, 0, 0.5 )' ).drawRoundRect( 0, 0, 250, 40, 10 );
 
-		var gtext = new createjs.Text( 'Play again ?', 'bold 20px Arial', '#000000' );
+		let gtext = new createjs.Text( 'Play again ?', 'bold 20px Arial', '#000000' );
 		gtext.textAlign = 'center';
 		gtext.textBaseline = 'middle';
 		gtext.x = 250 / 2;
@@ -73,13 +86,6 @@ class cWin
 		this.mStage.addChild( this.mGPlayAgain );
 	}
 	
-	Start()
-	{
-		createjs.Ticker.timingMode = createjs.Ticker.RAF;
-		this.mListener = createjs.Ticker.on( 'tick', this._Tick, null, false, this );
-	}
-	
-// private
 	_Stop()
 	{
 		this.mStage.removeChild( this.mGYouWin );
@@ -91,7 +97,7 @@ class cWin
 	
 	_PlayAgain( iEvent, iData )
 	{
-		var that = iData;
+		let that = iData;
 		
 		iEvent.remove();
 		that._Stop();
@@ -99,7 +105,7 @@ class cWin
 	
 	_Tick( iEvent, iData )
 	{
-		var that = iData;
+		let that = iData;
 
 		that.mStage.update( iEvent );
 	}

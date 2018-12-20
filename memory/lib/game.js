@@ -39,8 +39,6 @@ class cGame
 		this.mDeck = new kidz.cDeck();
 		this.mDeck.Init( this.mAssets, iNumberOfCards );
 
-		var t = this.mDeck.GetCards()[0];
-		t.GetState();
 		this.mDeck.GetCards().forEach( iCard => 
 		{
 			iCard.GetImage().on( 'click', this._CardClicked, null, false, [this, iCard] );
@@ -71,31 +69,31 @@ class cGame
 
 		this._PlaceCards();
 
-		var cards = this.mDeck.GetCards();
+		let cards = this.mDeck.GetCards();
 		cards.forEach( iCard => this.mStage.addChild( iCard.GetImage() ) );
 	}
 	
 	_PlaceCards()
 	{
-		var cards = this.mDeck.GetCards();
-		var img0 = cards[0].GetImage();
-		var card_number_per_line = cards.length / 2;
-		var cards_width_per_line = img0.getBounds().width * card_number_per_line;
-		var cards_spaces_width_per_line = cards_width_per_line + ( card_number_per_line - 1 ) * 20;
+		let cards = this.mDeck.GetCards();
+		let img0 = cards[0].GetImage();
+		let card_number_per_line = cards.length / 2;
+		let cards_width_per_line = img0.getBounds().width * card_number_per_line;
+		let cards_spaces_width_per_line = cards_width_per_line + ( card_number_per_line - 1 ) * 20;
 
-		var start_x = this.mStage.canvas.width / 2 - cards_spaces_width_per_line / 2;
-		var x = start_x;
+		let start_x = this.mStage.canvas.width / 2 - cards_spaces_width_per_line / 2;
+		let x = start_x;
 
-		var half_height = this.mStage.canvas.height / 2;
-		var y1 = half_height / 2 - img0.getBounds().height / 2;
-		var y2 = half_height + y1;
+		let half_height = this.mStage.canvas.height / 2;
+		let y1 = half_height / 2 - img0.getBounds().height / 2;
+		let y2 = half_height + y1;
 
 		cards.forEach( ( iCard, iIndex ) => 
 		{
 			if( !( iIndex % card_number_per_line ) )
 				x = start_x;
 			
-			var img = iCard.GetImage();
+			let img = iCard.GetImage();
 			
 			img.x = x;
 			img.y = ( iIndex < card_number_per_line ) ? y1 : y2;
@@ -108,8 +106,8 @@ class cGame
 	
 	_CardClicked( iEvent, iData )
 	{
-		var that = iData[0];
-		var card = iData[1];
+		let that = iData[0];
+		let card = iData[1];
 
 		switch( that.mDeck.GetState() )
 		{
@@ -146,7 +144,7 @@ class cGame
 	
 	_Tick( iEvent, iData )
 	{
-		var that = iData;
+		let that = iData;
 
 		switch( that.mDeck.GetState() )
 		{
@@ -170,7 +168,7 @@ class cGame
 				}
 				break;
 			case kidz.cDeck.eState.kBeginWait:
-				var delta = Date.now() - that.mStartWait;
+				let delta = Date.now() - that.mStartWait;
 				if( delta < 1 * 1000 )
 					break;
 

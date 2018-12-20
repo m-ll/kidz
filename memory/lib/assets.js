@@ -47,24 +47,24 @@ class cAssets
 // private
 	_LoadBack()
 	{
-		var that = this;
+		let that = this;
 		
-		var loader = new createjs.LoadQueue( false );
+		let loader = new createjs.LoadQueue( false );
 		loader.on( 'complete', that._BuildBack, null, false, that );
 		loader.loadFile( { 'id': that.mConfig['card-back']['id'], 'src': that.mConfig['card-back']['name'] }, true, 'assets/' );
 	}
 	_BuildBack( iEvent, iData )
 	{
-		var loader = iEvent.target;
-		var that = iData;
+		let loader = iEvent.target;
+		let that = iData;
 		
 		that.mGBack = new createjs.Bitmap( loader.getResult( that.mConfig['card-back']['id'] ) );
-		var bounds = that.mGBack.getBounds();
+		let bounds = that.mGBack.getBounds();
 		that.mGBack.setBounds( bounds.x, bounds.y, bounds.width, bounds.height );
 		
 		//---
 		
-		var gtext = new createjs.Text( 'Back Loaded ...', 'bold 20px Arial', '#000000' );
+		let gtext = new createjs.Text( 'Back Loaded ...', 'bold 20px Arial', '#000000' );
 		gtext.textAlign = 'center';
 		gtext.textBaseline = 'middle';
 		gtext.x = that.mStage.canvas.width / 2;
@@ -80,31 +80,31 @@ class cAssets
 	
 	_LoadCards( iEvent, iData )
 	{
-		var that = iData;
+		let that = iData;
 		
-		var manifest = [];
+		let manifest = [];
 		that.mConfig['cards'].forEach( iElement =>
 		{
 			manifest.push( { 'id': iElement['id'], 'src': iElement['name'] } );
 		});
 
-		var loader = new createjs.LoadQueue( false );
+		let loader = new createjs.LoadQueue( false );
 		loader.on( 'complete', that._Finish, null, false, that );
 		loader.on( 'fileload', that._BuildCard, null, false, that );
 		loader.loadManifest( manifest, true, 'assets/' );
 	}
 	_BuildCard( iEvent, iData )
 	{
-		var loader = iEvent.target;
-		var that = iData;
-		var item = iEvent.item;
+		let loader = iEvent.target;
+		let that = iData;
+		let item = iEvent.item;
 		
-		var img = new createjs.Bitmap( loader.getResult( item.id ) );
-		var bounds = img.getBounds();
+		let img = new createjs.Bitmap( loader.getResult( item.id ) );
+		let bounds = img.getBounds();
 		img.setBounds( bounds.x, bounds.y, bounds.width, bounds.height );
 		that.mGCards.push( { 'id': item.id, 'image': img } );
 
-		// var spriteSheet = new createjs.SpriteSheet(
+		// let spriteSheet = new createjs.SpriteSheet(
 		// {
 			// framerate: 3,
 			// 'images': [loader.getResult( 'butterfly' )],
@@ -118,7 +118,7 @@ class cAssets
 		
 		//---
 		
-		var gtext = new createjs.Text( 'Card Loaded: ' + item.id + '...', 'bold 20px Arial', '#000000' );
+		let gtext = new createjs.Text( 'Card Loaded: ' + item.id + '...', 'bold 20px Arial', '#000000' );
 		gtext.textAlign = 'center';
 		gtext.textBaseline = 'middle';
 		gtext.x = that.mStage.canvas.width / 2;
@@ -130,7 +130,7 @@ class cAssets
 
 	_Finish( iEvent, iData )
 	{
-		var that = iData;
+		let that = iData;
 		
 		//---
 

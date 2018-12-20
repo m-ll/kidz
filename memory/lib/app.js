@@ -37,7 +37,7 @@ class cApp
 	
 	Start()
 	{
-		var presentation = new kidz.cPresentation( this.mStage, this.mAssets, this._Assets, this );
+		let presentation = new kidz.cPresentation( this.mStage, this.mAssets, this._Assets, this );
 		presentation.Init();
 		presentation.Build();
 		presentation.Start();
@@ -53,7 +53,7 @@ class cApp
 	_Menu()
 	{
 		this._Game();
-		// var menu = new kidz.cMenu( this.mStage, this.mAssets, this._Game, this );
+		// let menu = new kidz.cMenu( this.mStage, this.mAssets, this._Game, this );
 		// menu.Init();
 		// menu.Build();
 		// menu.Start();
@@ -61,7 +61,7 @@ class cApp
 	
 	_Game()
 	{
-		var game = new kidz.cGame( this.mStage, this.mAssets, this._Win, this );
+		let game = new kidz.cGame( this.mStage, this.mAssets, this._Win, this );
 		game.Init();
 		game.Build( this.mConfig['number-of-cards'] );
 		game.Start();
@@ -69,7 +69,7 @@ class cApp
 
 	_Win()
 	{
-		var win = new kidz.cWin( this.mStage, this.mAssets, this._Game, this );
+		let win = new kidz.cWin( this.mStage, this.mAssets, this._Game, this );
 		win.Init();
 		win.Build();
 		win.Start();

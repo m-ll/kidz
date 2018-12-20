@@ -51,7 +51,7 @@ class cCard
 		{
 			case cCard.eState.kFound:
 				this.mGFace.filters = [new createjs.ColorFilter( 1, 1, 1, 1, 100, 100, 100, 0 )];
-				var bounds = this.mGFace.getBounds();
+				let bounds = this.mGFace.getBounds();
 				this.mGFace.cache( bounds.x, bounds.y, bounds.width, bounds.height );
 				break;
 		}
@@ -124,23 +124,23 @@ class cDeck
 	
 	Init( iAssets, iNumber )
 	{
-		var cards = Array.from( Array( iAssets.GetGCards().length ).keys() );
-		// var cards = iAssets.GetGCards();
-		var number = Math.min( iNumber, iAssets.GetGCards().length );
-		var number_of_total_cards = number * 2;
+		let cards = Array.from( Array( iAssets.GetGCards().length ).keys() );
+		// let cards = iAssets.GetGCards();
+		let number = Math.min( iNumber, iAssets.GetGCards().length );
+		let number_of_total_cards = number * 2;
 		while( this.mCards.length != number_of_total_cards )
 		{
 			// Get a random card ( mainly if iNumber < iCardsIds.length )
-			var index = Math.floor( Math.random() * cards.length ); // https://www.w3schools.com/js/js_random.asp
+			let index = Math.floor( Math.random() * cards.length ); // https://www.w3schools.com/js/js_random.asp
 			index = cards.splice( index, 1 )[0];
 
-			var card = iAssets.GetGCards()[index];
+			let card = iAssets.GetGCards()[index];
 			
-			var card1 = new kidz.cCard( card['id'] );
+			let card1 = new kidz.cCard( card['id'] );
 			card1.SetImage( card['image'].clone(), iAssets.GetGBack().clone() )
 			this.mCards.push( card1 );
 
-			var card2 = new kidz.cCard( card['id'] );
+			let card2 = new kidz.cCard( card['id'] );
 			card2.SetImage( card['image'].clone(), iAssets.GetGBack().clone() )
 			this.mCards.push( card2 );
 		}
@@ -156,7 +156,7 @@ class cDeck
 	Check()
 	{
 		// Every cards to test
-		var cards = this.mCards.filter( iCard => iCard.GetState() === kidz.cCard.eState.kTry );
+		let cards = this.mCards.filter( iCard => iCard.GetState() === kidz.cCard.eState.kTry );
 		if( cards.length !== 2 )
 			return false;
 		
@@ -171,7 +171,7 @@ class cDeck
 	
 	Process()
 	{
-		var new_state = this.Check() ? kidz.cCard.eState.kFound : kidz.cCard.eState.kHidden;
+		let new_state = this.Check() ? kidz.cCard.eState.kFound : kidz.cCard.eState.kHidden;
 		
 		// Update the state of the tested cards
 		this.mCards.forEach( iCard =>
@@ -184,11 +184,11 @@ class cDeck
 // private
 	_Shuffle()
 	{
-		for( var i = this.mCards.length - 1; i > 0; i-- )
+		for( let i = this.mCards.length - 1; i > 0; i-- )
 		{
-			var j = Math.floor( Math.random() * ( i + 1 ) );
+			let j = Math.floor( Math.random() * ( i + 1 ) );
 			
-			var x = this.mCards[i];
+			let x = this.mCards[i];
 			this.mCards[i] = this.mCards[j];
 			this.mCards[j] = x;
 		}

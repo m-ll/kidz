@@ -59,7 +59,7 @@ class cPresentation
 	
 	_Tick( iEvent, iData )
 	{
-		var that = iData;
+		let that = iData;
 		
 		that.mGText.y += 10;
 
