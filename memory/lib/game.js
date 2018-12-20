@@ -8,12 +8,9 @@
 /// 29c355784a3921aa290371da87bce9c1617b8584ca6ac6fb17fb37ba4a07d191
 ///
 
-this.kidz = this.kidz || {};
+import { cDeck, cCard } from './deck.js';
 
-(function()
-{
-"use strict";
-
+export 
 class cGame
 {
 	constructor( iStage, iAssets, iNextCB, iNextCBData )
@@ -36,7 +33,7 @@ class cGame
 	
 	Build( iNumberOfCards )
 	{
-		this.mDeck = new kidz.cDeck();
+		this.mDeck = new cDeck();
 		this.mDeck.Init( this.mAssets, iNumberOfCards );
 
 		this.mDeck.GetCards().forEach( iCard => 
@@ -111,33 +108,33 @@ class cGame
 
 		switch( that.mDeck.GetState() )
 		{
-			case kidz.cDeck.eState.kIdle:
-				if( card.GetState() !== kidz.cCard.eState.kHidden )
+			case cDeck.eState.kIdle:
+				if( card.GetState() !== cCard.eState.kHidden )
 					break;
 
-				card.SetState( kidz.cCard.eState.kTry );
-				that.mDeck.SetState( kidz.cDeck.eState.kTry );
+				card.SetState( cCard.eState.kTry );
+				that.mDeck.SetState( cDeck.eState.kTry );
 				that._Refresh();
 				break;
-			case kidz.cDeck.eState.kTry:
-				if( card.GetState() !== kidz.cCard.eState.kHidden )
+			case cDeck.eState.kTry:
+				if( card.GetState() !== cCard.eState.kHidden )
 					break;
 					
 				that.mStartWait = Date.now();
 
-				card.SetState( kidz.cCard.eState.kTry );
-				that.mDeck.SetState( kidz.cDeck.eState.kTest );
+				card.SetState( cCard.eState.kTry );
+				that.mDeck.SetState( cDeck.eState.kTest );
 				that._Refresh();
 				break;
-			// case kidz.cDeck.eState.kTest:
+			// case cDeck.eState.kTest:
 			// 	break;
 			// To not wait between begin/end wait
-			// case kidz.cDeck.eState.kBeginWait:
+			// case cDeck.eState.kBeginWait:
 				// that.mDeck.Process();
-				// that.mDeck.SetState( kidz.cDeck.eState.kIdle );
+				// that.mDeck.SetState( cDeck.eState.kIdle );
 				// that._CardClicked( iEvent, iData );
 				// break;
-			// case kidz.cDeck.eState.kEndWait:
+			// case cDeck.eState.kEndWait:
 			// 	break;
 		}
 	}
@@ -148,36 +145,36 @@ class cGame
 
 		switch( that.mDeck.GetState() )
 		{
-			case kidz.cDeck.eState.kIdle:
+			case cDeck.eState.kIdle:
 				if( that.mDeck.Win() )
 				{
 					iEvent.remove();
 					that._Stop();
 				}
 				break;
-			case kidz.cDeck.eState.kTest:
+			case cDeck.eState.kTest:
 				if( that.mDeck.Check() )
 				{
 					that.mDeck.Process();
-					that.mDeck.SetState( kidz.cDeck.eState.kIdle );
+					that.mDeck.SetState( cDeck.eState.kIdle );
 					that._Refresh();
 				}
 				else
 				{
-					that.mDeck.SetState( kidz.cDeck.eState.kBeginWait );
+					that.mDeck.SetState( cDeck.eState.kBeginWait );
 				}
 				break;
-			case kidz.cDeck.eState.kBeginWait:
+			case cDeck.eState.kBeginWait:
 				let delta = Date.now() - that.mStartWait;
 				if( delta < 1 * 1000 )
 					break;
 
-				that.mDeck.SetState( kidz.cDeck.eState.kEndWait );
+				that.mDeck.SetState( cDeck.eState.kEndWait );
 				that._Refresh();
 				break;
-			case kidz.cDeck.eState.kEndWait:
+			case cDeck.eState.kEndWait:
 				that.mDeck.Process();
-				that.mDeck.SetState( kidz.cDeck.eState.kIdle );
+				that.mDeck.SetState( cDeck.eState.kIdle );
 				that._Refresh();
 				break;
 		}
@@ -185,7 +182,3 @@ class cGame
 		that.mStage.update( iEvent );
 	}
 }
-
-// module
-kidz.cGame = cGame;
-}());

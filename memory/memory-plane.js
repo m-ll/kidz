@@ -8,9 +8,11 @@
 /// 29c355784a3921aa290371da87bce9c1617b8584ca6ac6fb17fb37ba4a07d191
 ///
 
+import { cApp } from './lib/app.js';
+
 function App( iConfig )
 {
-	var app = new kidz.cApp();
+	let app = new cApp();
 	app.Init( iConfig );
 	app.Start();
 }

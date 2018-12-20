@@ -8,12 +8,7 @@
 /// 29c355784a3921aa290371da87bce9c1617b8584ca6ac6fb17fb37ba4a07d191
 ///
 
-this.kidz = this.kidz || {};
-
-(function()
-{
-"use strict";
-
+export 
 class cAssets
 {
 	constructor( iStage, iNextCB, iNextCBData )
@@ -138,7 +133,3 @@ class cAssets
 		that.mNextCB.call( that.mNextCBData );
 	}
 }
-
-// module
-kidz.cAssets = cAssets;
-}());

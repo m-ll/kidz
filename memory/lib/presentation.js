@@ -8,12 +8,7 @@
 /// 29c355784a3921aa290371da87bce9c1617b8584ca6ac6fb17fb37ba4a07d191
 ///
 
-this.kidz = this.kidz || {};
-
-(function()
-{
-"use strict";
-
+export 
 class cPresentation
 {
 	constructor( iStage, iAssets, iNextCB, iNextCBData )
@@ -74,7 +69,3 @@ class cPresentation
 		that.mStage.update( iEvent );
 	}
 }
-
-// module
-kidz.cPresentation = cPresentation;
-}());

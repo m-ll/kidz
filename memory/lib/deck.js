@@ -8,12 +8,7 @@
 /// 29c355784a3921aa290371da87bce9c1617b8584ca6ac6fb17fb37ba4a07d191
 ///
 
-this.kidz = this.kidz || {};
-
-(function()
-{
-"use strict";
-
+export 
 class cCard
 {
 	constructor( iName )
@@ -26,7 +21,8 @@ class cCard
 	}
 	
 // public
-	static get eState()
+	static 
+	get eState()
 	{
 		return { kHidden: 'hidden', kFound: 'found', kTry: 'try' };
 	}
@@ -72,18 +68,9 @@ class cCard
 	}
 }
 
-// module
-kidz.cCard = cCard;
-}());
-
 //---
 
-this.kidz = this.kidz || {};
-
-(function()
-{
-"use strict";
-
+export 
 class cDeck
 {
 	constructor()
@@ -95,7 +82,8 @@ class cDeck
 	}
 	
 // public
-	static get eState()
+	static 
+	get eState()
 	{
 		return {
 				kIdle: 'idle',
@@ -136,11 +124,11 @@ class cDeck
 
 			let card = iAssets.GetGCards()[index];
 			
-			let card1 = new kidz.cCard( card['id'] );
+			let card1 = new cCard( card['id'] );
 			card1.SetImage( card['image'].clone(), iAssets.GetGBack().clone() )
 			this.mCards.push( card1 );
 
-			let card2 = new kidz.cCard( card['id'] );
+			let card2 = new cCard( card['id'] );
 			card2.SetImage( card['image'].clone(), iAssets.GetGBack().clone() )
 			this.mCards.push( card2 );
 		}
@@ -150,13 +138,13 @@ class cDeck
 	
 	Win()
 	{
-		return this.mCards.every( iCard => iCard.GetState() === kidz.cCard.eState.kFound );
+		return this.mCards.every( iCard => iCard.GetState() === cCard.eState.kFound );
 	}
 	
 	Check()
 	{
 		// Every cards to test
-		let cards = this.mCards.filter( iCard => iCard.GetState() === kidz.cCard.eState.kTry );
+		let cards = this.mCards.filter( iCard => iCard.GetState() === cCard.eState.kTry );
 		if( cards.length !== 2 )
 			return false;
 		
@@ -171,12 +159,12 @@ class cDeck
 	
 	Process()
 	{
-		let new_state = this.Check() ? kidz.cCard.eState.kFound : kidz.cCard.eState.kHidden;
+		let new_state = this.Check() ? cCard.eState.kFound : cCard.eState.kHidden;
 		
 		// Update the state of the tested cards
 		this.mCards.forEach( iCard =>
 		{
-			if( iCard.GetState() === kidz.cCard.eState.kTry )
+			if( iCard.GetState() === cCard.eState.kTry )
 				iCard.SetState( new_state );
 		});
 	}
@@ -194,7 +182,3 @@ class cDeck
 		}
 	}
 }
-
-// module
-kidz.cDeck = cDeck;
-}());

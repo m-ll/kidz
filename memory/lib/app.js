@@ -8,12 +8,12 @@
 /// 29c355784a3921aa290371da87bce9c1617b8584ca6ac6fb17fb37ba4a07d191
 ///
 
-this.kidz = this.kidz || {};
+import { cPresentation } from './presentation.js';
+import { cAssets } from './assets.js';
+import { cGame } from './game.js';
+import { cWin } from './win.js';
 
-(function()
-{
-"use strict";
-
+export 
 class cApp
 {
 	constructor()
@@ -37,7 +37,7 @@ class cApp
 	
 	Start()
 	{
-		let presentation = new kidz.cPresentation( this.mStage, this.mAssets, this._Assets, this );
+		let presentation = new cPresentation( this.mStage, this.mAssets, this._Assets, this );
 		presentation.Init();
 		presentation.Build();
 		presentation.Start();
@@ -46,14 +46,14 @@ class cApp
 // private
 	_Assets()
 	{
-		this.mAssets = new kidz.cAssets( this.mStage, this._Menu, this );
+		this.mAssets = new cAssets( this.mStage, this._Menu, this );
 		this.mAssets.Load( this.mConfig['assets'] );
 	}
 	
 	_Menu()
 	{
 		this._Game();
-		// let menu = new kidz.cMenu( this.mStage, this.mAssets, this._Game, this );
+		// let menu = new cMenu( this.mStage, this.mAssets, this._Game, this );
 		// menu.Init();
 		// menu.Build();
 		// menu.Start();
@@ -61,7 +61,7 @@ class cApp
 	
 	_Game()
 	{
-		let game = new kidz.cGame( this.mStage, this.mAssets, this._Win, this );
+		let game = new cGame( this.mStage, this.mAssets, this._Win, this );
 		game.Init();
 		game.Build( this.mConfig['number-of-cards'] );
 		game.Start();
@@ -69,13 +69,9 @@ class cApp
 
 	_Win()
 	{
-		let win = new kidz.cWin( this.mStage, this.mAssets, this._Game, this );
+		let win = new cWin( this.mStage, this.mAssets, this._Game, this );
 		win.Init();
 		win.Build();
 		win.Start();
 	}
 }
-
-// module
-kidz.cApp = cApp;
-}());
