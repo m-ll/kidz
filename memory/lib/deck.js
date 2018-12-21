@@ -77,6 +77,7 @@ class cDeck
 	{
 		this.mCards = [];
 		this.mGBack = null;
+		this.mSFlip = '';
 
 		this.mState = cDeck.eState.kIdle;
 	}
@@ -108,10 +109,15 @@ class cDeck
 	SetState( iState )
 	{
 		this.mState = iState;
+		
+		if( this.mState === cDeck.eState.kTry || this.mState === cDeck.eState.kTest )
+			/*let instance =*/ createjs.Sound.play( this.mSFlip );
 	}
 	
 	Init( iAssets, iNumber )
 	{
+		this.mSFlip = iAssets.GetSFlip();
+		
 		let cards = Array.from( Array( iAssets.GetGCards().length ).keys() );
 		// let cards = iAssets.GetGCards();
 		let number = Math.min( iNumber, iAssets.GetGCards().length );

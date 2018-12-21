@@ -3,6 +3,8 @@
 
 	"assets":
 	{
+		"flip": { "id": "flip", "name": "cling.wav" },
+		
 		"card-back": { "id": "back", "name": "back.png" },
 		"cards": 
 		[

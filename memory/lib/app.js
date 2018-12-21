@@ -33,6 +33,7 @@ class cApp
 		this.mStage.enableMouseOver();
 		
 		createjs.Touch.enable( this.mStage );
+		createjs.Sound.initializeDefaultPlugins(); //TODO: error handling
 	}
 	
 	Start()

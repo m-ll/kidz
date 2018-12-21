@@ -19,11 +19,16 @@ class cAssets
 		
 		this.mConfig = null;
 
+		this.mSFlip = '';
 		this.mGBack = null;
 		this.mGCards = [];
 	}
 	
 // public
+	GetSFlip()
+	{
+		return this.mSFlip;
+	}
 	GetGBack()
 	{
 		return this.mGBack;
@@ -84,7 +89,7 @@ class cAssets
 		});
 
 		let loader = new createjs.LoadQueue( false );
-		loader.on( 'complete', that._Finish, null, false, that );
+		loader.on( 'complete', that._BuildCards, null, false, that );
 		loader.on( 'fileload', that._BuildCard, null, false, that );
 		loader.loadManifest( manifest, true, 'assets/' );
 	}
@@ -123,6 +128,34 @@ class cAssets
 		that.mStage.update( iEvent );
 	}
 
+	_BuildCards( iEvent, iData )
+	{
+		let that = iData;
+		
+		that._LoadFlip( iEvent, that );
+	}
+
+	_LoadFlip( iEvent, iData )
+	{
+		let that = iData;
+		
+		let loader = new createjs.LoadQueue( false );
+		loader.installPlugin( createjs.Sound );
+		loader.on( 'complete', that._BuildFlip, null, false, that );
+		loader.loadFile( { 'id': that.mConfig['flip']['id'], 'src': that.mConfig['flip']['name'] }, true, 'assets/' );
+	}
+	_BuildFlip( iEvent, iData )
+	{
+		let loader = iEvent.target;
+		let that = iData;
+		
+		that.mSFlip = that.mConfig['flip']['id']; //loader.getResult( that.mConfig['flip']['id'] );
+		
+		//---
+		
+		that._Finish( iEvent, iData );
+	}
+	
 	_Finish( iEvent, iData )
 	{
 		let that = iData;
