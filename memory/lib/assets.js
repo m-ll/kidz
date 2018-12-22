@@ -146,11 +146,22 @@ class cAssets
 	}
 	_BuildFlip( iEvent, iData )
 	{
-		let loader = iEvent.target;
+		// let loader = iEvent.target;
 		let that = iData;
 		
 		that.mSFlip = that.mConfig['flip']['id']; //loader.getResult( that.mConfig['flip']['id'] );
 		
+		//---
+		
+		let gtext = new createjs.Text( 'Sound Loaded: ' + that.mSFlip + '...', 'bold 20px Arial', '#000000' );
+		gtext.textAlign = 'center';
+		gtext.textBaseline = 'middle';
+		gtext.x = that.mStage.canvas.width / 2;
+		gtext.y = 20 * ( 2 + that.mGCards.length + 1 );
+
+		that.mStage.addChild( gtext );
+		that.mStage.update( iEvent );
+
 		//---
 		
 		that._Finish( iEvent, iData );
