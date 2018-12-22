@@ -25,11 +25,11 @@ class cApp
 	}
 	
 // public
-	Init( iConfig )
+	Init( iConfig, iCanvasId )
 	{
 		this.mConfig = iConfig;
 
-		this.mStage = new createjs.Stage( 'canvas' );
+		this.mStage = new createjs.Stage( iCanvasId );
 		this.mStage.enableMouseOver();
 		
 		createjs.Touch.enable( this.mStage );

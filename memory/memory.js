@@ -10,13 +10,6 @@
 
 import { cApp } from './lib/app.js';
 
-function App( iConfig )
-{
-	let app = new cApp();
-	app.Init( iConfig );
-	app.Start();
-}
-
 $( document ).ready( function() 
 {
 	// https://stackoverflow.com/questions/2618959/not-well-formed-warning-when-loading-client-side-json-in-firefox-via-jquery-aj/4234006
@@ -26,6 +19,19 @@ $( document ).ready( function()
 			xhr.overrideMimeType( 'application/json' );
 	}
 	});
+	//---
 
-	$.getJSON( 'memory-plane.json', App );
+	let configs = $( '#memory-boot' ).data( 'memory-config' );
+	if( !Array.isArray( configs ) )
+		configs = [ configs ];
+	
+	configs.forEach( iConfig => 
+	{
+		$.getJSON( iConfig['config'], iJSON =>
+		{
+			let app = new cApp();
+			app.Init( iJSON, iConfig['canvas'] );
+			app.Start();
+		});
+	});
 });
