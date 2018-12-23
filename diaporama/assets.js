@@ -46,17 +46,15 @@ class cAssets extends cAssetsA
 	{
 		super.Load();
 
-		this._LoadBackground( this );
+		this._LoadBackground();
 	}
 	
 // private
-	_LoadBackground( iData )
+	_LoadBackground()
 	{
-		let that = iData;
-		
 		let loader = new createjs.LoadQueue( false );
-		loader.on( 'complete', that._BuildBackground, null, false, that );
-		loader.loadFile( { 'id': that.Config().background.id, 'src': that.Config().background.name }, true, 'assets/' );
+		loader.on( 'complete', this._BuildBackground, null, false, this );
+		loader.loadFile( { 'id': this.Config().background.id, 'src': this.Config().background.name }, true, 'assets/' );
 	}
 	_BuildBackground( iEvent, iData )
 	{
@@ -80,22 +78,20 @@ class cAssets extends cAssetsA
 
 		//---
 		
-		that._LoadSprites( iData );
+		that._LoadSprites();
 	}
 	
-	_LoadSprites( iData )
+	_LoadSprites()
 	{
-		let that = iData;
-		
 		let manifest = [];
-		that.Config().levels.forEach( iLevel =>
+		this.Config().levels.forEach( iLevel =>
 		{
 			manifest.push( { 'id': iLevel.id, 'src': iLevel.name } );
 		});
 
 		let loader = new createjs.LoadQueue( false );
-		loader.on( 'complete', that._BuildSprites, null, false, that );
-		loader.on( 'fileload', that._BuildSprite, null, false, that );
+		loader.on( 'complete', this._BuildSprites, null, false, this );
+		loader.on( 'fileload', this._BuildSprite, null, false, this );
 		loader.loadManifest( manifest, true, 'assets/' );
 	}
 	_BuildSprite( iEvent, iData )
