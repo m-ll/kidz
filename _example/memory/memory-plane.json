@@ -1,0 +1,16 @@
+{
+	"count": 3,
+
+	"assets":
+	{
+		"flip": { "id": "flip", "name": "cling.wav" },
+		
+		"back": { "id": "back", "name": "back.png" },
+		"cards": 
+		[
+			{ "id": "plane", "name": "plane.png" },
+			{ "id": "planeO", "name": "planeO.png" },
+			{ "id": "planeX", "name": "planeX.png" }
+		]
+	}
+}
