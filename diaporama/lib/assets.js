@@ -101,13 +101,28 @@ class cAssets
 		
 		let level = that.mConfig.levels.find( iLevel => iLevel.id === item.id );
 
-		let spritesheet_images_id = level.spritesheet.ids;
-		let spritesheet_images = Array.from( spritesheet_images_id, iId => loader.getResult( iId ) );
-		level.spritesheet.images = spritesheet_images;
+		if( level.spritesheet )
+		{
+			let spritesheet_images_id = level.spritesheet.ids;
+			let spritesheet_images = Array.from( spritesheet_images_id, iId => loader.getResult( iId ) );
+			level.spritesheet.images = spritesheet_images;
 
-		let gspritesheet = new createjs.SpriteSheet( level.spritesheet );
-		let gsprite = new createjs.Sprite( gspritesheet, level.start );
-		that.mGSprites.push( gsprite );
+			let gspritesheet = new createjs.SpriteSheet( level.spritesheet );
+			let gsprite = new createjs.Sprite( gspritesheet, level.start );
+			let bounds = gsprite.getBounds();
+			gsprite.setBounds( bounds.x, bounds.y, bounds.width, bounds.height );
+
+			that.mGSprites.push( gsprite );
+		}
+		else
+		{
+			let gsprite = new createjs.Bitmap( loader.getResult( level.id ) );
+			let bounds = gsprite.getBounds();
+			gsprite.setBounds( bounds.x, bounds.y, bounds.width, bounds.height );
+			
+			that.mGSprites.push( gsprite );
+		}
+
 		that.mTSprites.push( level.tweens ); //TODO: maybe get them in game as they are not really assets
 		
 		//---

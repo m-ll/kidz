@@ -8,15 +8,6 @@
 				"id": "plane", 
 				"name": "plane.png",
 
-				"spritesheet":
-				{
-					"ids": ["plane"],
-					"frames": { "regX": 0, "regY": 0, "width": 150, "height": 150, "count": 1 },
-					"animations": { "idle": 0 },
-					"framerate": 1
-				},
-				"start": "idle",
-
 				"tweens": 
 				[
 					{

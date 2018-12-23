@@ -27,7 +27,7 @@ $( document ).ready( function()
 	
 	configs.forEach( iConfig => 
 	{
-		$.getJSON( iConfig.config, iJSON =>
+		$.getJSON( iConfig.file, iJSON =>
 		{
 			let app = new cApp();
 			app.Init( iJSON, iConfig.canvas );
