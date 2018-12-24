@@ -2,38 +2,36 @@
 	"count": 5,
 	
 	"assets":
-	{
-		"flip": { "id": "flip", "name": "cling.wav" },
+	[
+		{ "id": "flip", "name": "cling.wav" },
 		
-		"back": { "id": "back", "name": "back.png" },
-		"cards": 
-		[
-			{ "id": "upper-a", "name": "upper-a.png" },
-			{ "id": "upper-b", "name": "upper-b.png" },
-			{ "id": "upper-c", "name": "upper-c.png" },
-			{ "id": "upper-d", "name": "upper-d.png" },
-			{ "id": "upper-e", "name": "upper-e.png" },
-			{ "id": "upper-f", "name": "upper-f.png" },
-			{ "id": "upper-g", "name": "upper-g.png" },
-			{ "id": "upper-h", "name": "upper-h.png" },
-			{ "id": "upper-i", "name": "upper-i.png" },
-			{ "id": "upper-j", "name": "upper-j.png" },
-			{ "id": "upper-k", "name": "upper-k.png" },
-			{ "id": "upper-l", "name": "upper-l.png" },
-			{ "id": "upper-m", "name": "upper-m.png" },
-			{ "id": "upper-n", "name": "upper-n.png" },
-			{ "id": "upper-o", "name": "upper-o.png" },
-			{ "id": "upper-p", "name": "upper-p.png" },
-			{ "id": "upper-q", "name": "upper-q.png" },
-			{ "id": "upper-r", "name": "upper-r.png" },
-			{ "id": "upper-s", "name": "upper-s.png" },
-			{ "id": "upper-t", "name": "upper-t.png" },
-			{ "id": "upper-u", "name": "upper-u.png" },
-			{ "id": "upper-v", "name": "upper-v.png" },
-			{ "id": "upper-w", "name": "upper-w.png" },
-			{ "id": "upper-x", "name": "upper-x.png" },
-			{ "id": "upper-y", "name": "upper-y.png" },
-			{ "id": "upper-z", "name": "upper-z.png" }
-		]
-	}
+		{ "id": "back", "name": "back.png" },
+		
+		{ "id": "card-a", "name": "upper-a.png" },
+		{ "id": "card-b", "name": "upper-b.png" },
+		{ "id": "card-c", "name": "upper-c.png" },
+		{ "id": "card-d", "name": "upper-d.png" },
+		{ "id": "card-e", "name": "upper-e.png" },
+		{ "id": "card-f", "name": "upper-f.png" },
+		{ "id": "card-g", "name": "upper-g.png" },
+		{ "id": "card-h", "name": "upper-h.png" },
+		{ "id": "card-i", "name": "upper-i.png" },
+		{ "id": "card-j", "name": "upper-j.png" },
+		{ "id": "card-k", "name": "upper-k.png" },
+		{ "id": "card-l", "name": "upper-l.png" },
+		{ "id": "card-m", "name": "upper-m.png" },
+		{ "id": "card-n", "name": "upper-n.png" },
+		{ "id": "card-o", "name": "upper-o.png" },
+		{ "id": "card-p", "name": "upper-p.png" },
+		{ "id": "card-q", "name": "upper-q.png" },
+		{ "id": "card-r", "name": "upper-r.png" },
+		{ "id": "card-s", "name": "upper-s.png" },
+		{ "id": "card-t", "name": "upper-t.png" },
+		{ "id": "card-u", "name": "upper-u.png" },
+		{ "id": "card-v", "name": "upper-v.png" },
+		{ "id": "card-w", "name": "upper-w.png" },
+		{ "id": "card-x", "name": "upper-x.png" },
+		{ "id": "card-y", "name": "upper-y.png" },
+		{ "id": "card-z", "name": "upper-z.png" }
+	]
 }

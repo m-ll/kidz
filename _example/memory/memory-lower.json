@@ -2,38 +2,36 @@
 	"count": 4,
 
 	"assets":
-	{
-		"flip": { "id": "flip", "name": "cling.wav" },
+	[
+		{ "id": "flip", "name": "cling.wav" },
+
+		{ "id": "back", "name": "back.png" },
 		
-		"back": { "id": "back", "name": "back.png" },
-		"cards": 
-		[
-			{ "id": "lower-a", "name": "lower-a.png" },
-			{ "id": "lower-b", "name": "lower-b.png" },
-			{ "id": "lower-c", "name": "lower-c.png" },
-			{ "id": "lower-d", "name": "lower-d.png" },
-			{ "id": "lower-e", "name": "lower-e.png" },
-			{ "id": "lower-f", "name": "lower-f.png" },
-			{ "id": "lower-g", "name": "lower-g.png" },
-			{ "id": "lower-h", "name": "lower-h.png" },
-			{ "id": "lower-i", "name": "lower-i.png" },
-			{ "id": "lower-j", "name": "lower-j.png" },
-			{ "id": "lower-k", "name": "lower-k.png" },
-			{ "id": "lower-l", "name": "lower-l.png" },
-			{ "id": "lower-m", "name": "lower-m.png" },
-			{ "id": "lower-n", "name": "lower-n.png" },
-			{ "id": "lower-o", "name": "lower-o.png" },
-			{ "id": "lower-p", "name": "lower-p.png" },
-			{ "id": "lower-q", "name": "lower-q.png" },
-			{ "id": "lower-r", "name": "lower-r.png" },
-			{ "id": "lower-s", "name": "lower-s.png" },
-			{ "id": "lower-t", "name": "lower-t.png" },
-			{ "id": "lower-u", "name": "lower-u.png" },
-			{ "id": "lower-v", "name": "lower-v.png" },
-			{ "id": "lower-w", "name": "lower-w.png" },
-			{ "id": "lower-x", "name": "lower-x.png" },
-			{ "id": "lower-y", "name": "lower-y.png" },
-			{ "id": "lower-z", "name": "lower-z.png" }
-		]
-	}
+		{ "id": "card-a", "name": "lower-a.png" },
+		{ "id": "card-b", "name": "lower-b.png" },
+		{ "id": "card-c", "name": "lower-c.png" },
+		{ "id": "card-d", "name": "lower-d.png" },
+		{ "id": "card-e", "name": "lower-e.png" },
+		{ "id": "card-f", "name": "lower-f.png" },
+		{ "id": "card-g", "name": "lower-g.png" },
+		{ "id": "card-h", "name": "lower-h.png" },
+		{ "id": "card-i", "name": "lower-i.png" },
+		{ "id": "card-j", "name": "lower-j.png" },
+		{ "id": "card-k", "name": "lower-k.png" },
+		{ "id": "card-l", "name": "lower-l.png" },
+		{ "id": "card-m", "name": "lower-m.png" },
+		{ "id": "card-n", "name": "lower-n.png" },
+		{ "id": "card-o", "name": "lower-o.png" },
+		{ "id": "card-p", "name": "lower-p.png" },
+		{ "id": "card-q", "name": "lower-q.png" },
+		{ "id": "card-r", "name": "lower-r.png" },
+		{ "id": "card-s", "name": "lower-s.png" },
+		{ "id": "card-t", "name": "lower-t.png" },
+		{ "id": "card-u", "name": "lower-u.png" },
+		{ "id": "card-v", "name": "lower-v.png" },
+		{ "id": "card-w", "name": "lower-w.png" },
+		{ "id": "card-x", "name": "lower-x.png" },
+		{ "id": "card-y", "name": "lower-y.png" },
+		{ "id": "card-z", "name": "lower-z.png" }
+	]
 }

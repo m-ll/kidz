@@ -48,86 +48,17 @@ class cAssets extends cAssetsA
 	Load()
 	{
 		super.Load();
-		
-		this._LoadBack();
-	}
-
-// private
-	_LoadBack()
-	{
-		let loader = new createjs.LoadQueue( false );
-		loader.on( 'complete', this._BuildBack, null, false, { that: this } );
-		loader.loadFile( { 'id': this.Config().back.id, 'src': this.Config().back.name }, true, 'assets/' );
-	}
-	_BuildBack( /*createjs.Event*/ iEvent, /*object*/ iData )
-	{
-		let loader = iEvent.target;
-		let that = iData.that;
-		
-		that.mGBack = new createjs.Bitmap( loader.getResult( that.Config().back.id ) );
-		let bounds = that.mGBack.getBounds();
-		that.mGBack.setBounds( bounds.x, bounds.y, bounds.width, bounds.height );
-		
-		//---
-		
-		that._LoadCards();
 	}
 	
-	_LoadCards()
+// private
+	_Finish()
 	{
-		let manifest = [];
-		this.Config().cards.forEach( iCard =>
-		{
-			manifest.push( { 'id': iCard.id, 'src': iCard.name } );
-		});
+		this.mSFlip = this.GetAsset( 'flip' ).sound;
 
-		let loader = new createjs.LoadQueue( false );
-		loader.on( 'complete', this._BuildCards, null, false, { that: this } );
-		loader.on( 'fileload', this._BuildCard, null, false, { that: this } );
-		loader.on( 'progress', this._ProgressCards, null, false, { that: this } );
-		loader.loadManifest( manifest, true, 'assets/' );
-	}
-	_BuildCard( /*createjs.Event*/ iEvent, /*object*/ iData )
-	{
-		let loader = iEvent.target;
-		let that = iData.that;
-		let item = iEvent.item;
-		
-		let img = new createjs.Bitmap( loader.getResult( item.id ) );
-		let bounds = img.getBounds();
-		img.setBounds( bounds.x, bounds.y, bounds.width, bounds.height );
-		that.mGCards.push( { 'id': item.id, 'image': img } );
+		this.mGBack = this.GetAsset( 'back' ).graphic;
 
-	}
-	_ProgressCards( /*createjs.Event*/ iEvent, /*object*/ iData )
-	{
-		let that = iData.that;
-		
-		that._SetProgress( iEvent.loaded );
-	}
-	_BuildCards( /*createjs.Event*/ iEvent, /*object*/ iData )
-	{
-		let that = iData.that;
-		
-		that._LoadFlip();
-	}
+		this.mGCards = this.GetAssetsStartWith( 'card-' );
 
-	_LoadFlip()
-	{
-		let loader = new createjs.LoadQueue( false );
-		loader.installPlugin( createjs.Sound );
-		loader.on( 'complete', this._BuildFlip, null, false, { that: this } );
-		loader.loadFile( { 'id': this.Config().flip.id, 'src': this.Config().flip.name }, true, 'assets/' );
-	}
-	_BuildFlip( /*createjs.Event*/ iEvent, /*object*/ iData )
-	{
-		// let loader = iEvent.target;
-		let that = iData.that;
-		
-		that.mSFlip = that.Config().flip.id; //loader.getResult( that.Config().flip.id );
-		
-		//---
-		
-		that._Finish();
+		super._Finish();
 	}
 }

@@ -17,6 +17,8 @@ class cAssets extends cAssetsA
 	{
 		super();
 
+							/*json*/ this.mLevels = null;
+									 
 		         /*createjs.Bitmap*/ this.mGBackground = null;
 		/*createjs.DisplayObject[]*/ this.mGSprites = [];
 		                  /*json[]*/ this.mTSprites = [];
@@ -42,93 +44,28 @@ class cAssets extends cAssetsA
 // public
 	Init( /*json*/ iConfig )
 	{
-		super.Init( iConfig );
+		super.Init( iConfig.assets );
+
+		this.mLevels = iConfig.levels;
 	}
 
 	Load()
 	{
 		super.Load();
-
-		this._LoadBackground();
 	}
 	
 // private
-	_LoadBackground()
+	_Finish()
 	{
-		let loader = new createjs.LoadQueue( false );
-		loader.on( 'complete', this._BuildBackground, null, false, { that: this } );
-		loader.loadFile( { 'id': this.Config().background.id, 'src': this.Config().background.name }, true, 'assets/' );
-	}
-	_BuildBackground( /*createjs.Event*/ iEvent, /*object*/ iData )
-	{
-		let loader = iEvent.target;
-		let that = iData.that;
-		
-		that.mGBackground = new createjs.Bitmap( loader.getResult( that.Config().background.id ) );
-		let bounds = that.mGBackground.getBounds();
-		that.mGBackground.setBounds( bounds.x, bounds.y, bounds.width, bounds.height );
-		
-		//---
-		
-		that._LoadSprites();
-	}
-	
-	_LoadSprites()
-	{
-		let manifest = [];
-		this.Config().levels.forEach( iLevel =>
+		this.mGBackground = this.GetAsset( 'background' ).graphic;
+
+		let levels = this.mLevels;
+		levels.forEach( level =>
 		{
-			manifest.push( { 'id': iLevel.id, 'src': iLevel.name } );
+			this.mGSprites.push( this.GetAsset( level ).graphic );
+			this.mTSprites.push( this.GetAsset( level ).tweens );
 		});
-
-		let loader = new createjs.LoadQueue( false );
-		loader.on( 'complete', this._BuildSprites, null, false, { that: this } );
-		loader.on( 'fileload', this._BuildSprite, null, false, { that: this } );
-		loader.on( 'progress', this._ProgressSprites, null, false, { that: this } );
-		loader.loadManifest( manifest, true, 'assets/' );
-	}
-	_BuildSprite( /*createjs.Event*/ iEvent, /*object*/ iData )
-	{
-		let loader = iEvent.target;
-		let that = iData.that;
-		let item = iEvent.item;
 		
-		let level = that.Config().levels.find( iLevel => iLevel.id === item.id );
-
-		if( level.spritesheet )
-		{
-			let spritesheet_images_id = level.spritesheet.ids;
-			let spritesheet_images = Array.from( spritesheet_images_id, iId => loader.getResult( iId ) );
-			level.spritesheet.images = spritesheet_images;
-
-			let gspritesheet = new createjs.SpriteSheet( level.spritesheet );
-			let gsprite = new createjs.Sprite( gspritesheet, level.start );
-			let bounds = gsprite.getBounds();
-			gsprite.setBounds( bounds.x, bounds.y, bounds.width, bounds.height );
-
-			that.mGSprites.push( gsprite );
-		}
-		else
-		{
-			let gsprite = new createjs.Bitmap( loader.getResult( level.id ) );
-			let bounds = gsprite.getBounds();
-			gsprite.setBounds( bounds.x, bounds.y, bounds.width, bounds.height );
-			
-			that.mGSprites.push( gsprite );
-		}
-
-		that.mTSprites.push( level.tweens ); //TODO: maybe get them in game as they are not really assets
-	}
-	_ProgressSprites( /*createjs.Event*/ iEvent, /*object*/ iData )
-	{
-		let that = iData.that;
-		
-		that._SetProgress( iEvent.loaded );
-	}
-	_BuildSprites( /*createjs.Event*/ iEvent, /*object*/ iData )
-	{
-		let that = iData.that;
-		
-		that._Finish();
+		super._Finish();
 	}
 }

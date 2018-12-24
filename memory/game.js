@@ -134,13 +134,13 @@ class cGame
 			index = cards.splice( index, 1 )[0];
 
 			let card = iAssets.GetGCards()[index];
-			
+
 			let card1 = new cCard( card.id );
-			card1.SetImage( card.image.clone(), iAssets.GetGBack().clone() )
+			card1.SetImage( card.graphic.clone(), iAssets.GetGBack().clone() )
 			this.mCards.push( card1 );
 
 			let card2 = new cCard( card.id );
-			card2.SetImage( card.image.clone(), iAssets.GetGBack().clone() )
+			card2.SetImage( card.graphic.clone(), iAssets.GetGBack().clone() )
 			this.mCards.push( card2 );
 		}
 
