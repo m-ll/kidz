@@ -8,20 +8,17 @@
 /// 29c355784a3921aa290371da87bce9c1617b8584ca6ac6fb17fb37ba4a07d191
 ///
 
-import { cCycle } from '../core/cycle.js';
-
 export 
-class cGame extends cCycle
+class cGame
 {
-	constructor( /*createjs.Stage*/ iStage, /*cAssets*/ iAssets, /*function*/ iNextCB, /*object*/ iNextCBData )
+	constructor()
 	{
-		super( iStage, iAssets, iNextCB, iNextCBData );
-
-		          /*cGame.eState*/ this.mState = cGame.eState.kIdle;
-		/*createjs.DisplayObject*/ this.mCurrentSprite = null;
-				 /*createjs.Text*/ this.mGContinue = null;
-				 
-		                /*object*/ this.mListener = null;
+				 /*createjs.Bitmap*/ this.mGBackground = null;
+		/*createjs.DisplayObject[]*/ this.mGSprites = [];
+						  /*json[]*/ this.mTSprites = [];
+		  /*createjs.DisplayObject*/ this.mCurrentSprite = null;
+							
+					/*cGame.eState*/ this.mState = cGame.eState.kIdle;
 	}
 	
 // public
@@ -35,78 +32,48 @@ class cGame extends cCycle
 				kStopAnimation: 'stop-animation',
 				};
 	}
+	
+// public
+	/*cGame.eState*/
+	GetState()
+	{
+		return this.mState;
+	}
+	SetState( /*cGame.eState*/ iState )
+	{
+		this.mState = iState;
+	}
+
+	/*createjs.DisplayObject*/
+	GetCurrentSprite()
+	{
+		return this.mCurrentSprite;
+	}
+	/*createjs.Bitmap*/
+	GetBackground()
+	{
+		return this.mGBackground;
+	}
 
 // public
-	Init()
+	Init( /*cAssets*/ iAssets )
 	{
-		super.Init();
-
-		document.onkeydown = this._KeyHit.bind( this );
-	}
-	
-	Build()
-	{
-		super.Build();
-
-		this.Stage().addChild( this.Assets().GetGBackground() );
-
-		this.mCurrentSprite = this.Assets().GetGSprites()[0];
-		let current_tweens = this.Assets().GetTSprites()[0];
+		this.mGBackground = iAssets.GetGBackground();
+		this.mGSprites = iAssets.GetGSprites();
+		this.mTSprites = iAssets.GetTSprites();
+		
+		this.mCurrentSprite = this.mGSprites[0];
+		let current_tweens = this.mTSprites[0];
 		this.mCurrentSprite.x = current_tweens[0].position.x;
 		this.mCurrentSprite.y = current_tweens[0].position.y;
-		this.Stage().addChild( this.mCurrentSprite );
-		
-		this.mGContinue = new createjs.Text( 'Press a key to continue...', 'bold 20px Arial', '#000000' );
-		this.mGContinue.textAlign = 'center';
-		this.mGContinue.textBaseline = 'middle';
-		this.mGContinue.x = this.Stage().canvas.width / 2;
-		this.mGContinue.y = this.Stage().canvas.height / 2;
-		this.Stage().addChild( this.mGContinue );
 	}
 	
-	Start()
+	StartAnimation()
 	{
-		super.Start();
-
-		createjs.Ticker.timingMode = createjs.Ticker.RAF;
-		this.mListener = createjs.Ticker.on( 'tick', this._Tick, null, false, { that: this } );
-	}
-	
-// private
-	_Stop()
-	{
-		// It's commented to keep all stuff displayed during the win screen
-		// this.Stage().removeAllChildren();
-
-		createjs.Ticker.off( 'tick', this.mListener );
-		
-		super._Stop();
-	}
-	
-	_KeyHit( /*object*/ iEvent )
-	{
-		let event = iEvent;
-		if( !event )
-			event = window.event;
-			
-		// switch( event.keyCode ) {}
-
-		if( this.mState === cGame.eState.kIdle )
-			this.mState = cGame.eState.kStartAnimation;
-	}
-	
-	//---
-	
-	_StartAnimation()
-	{
-		this.Stage().removeChild( this.mGContinue );
-
-		//---
-
 		let tween = createjs.Tween.get( this.mCurrentSprite, { 'override': true } );
 		
-		let index = this.Assets().GetGSprites().indexOf( this.mCurrentSprite );
-		let tweens_param = this.Assets().GetTSprites()[index];
+		let index = this.mGSprites.indexOf( this.mCurrentSprite );
+		let tweens_param = this.mTSprites[index];
 		for( let i = 0; i < tweens_param.length; i++ )
 		{
 			let tween_param = tweens_param[i];
@@ -139,53 +106,18 @@ class cGame extends cCycle
 		}
 		
 		tween.call( () => this.mState = cGame.eState.kStopAnimation/*, [], this*/ );
-
-		//---
-
-		this.Stage().addChild( this.mCurrentSprite );
 	}
 
-	_StopAnimation()
+	/*boolean*/
+	StopAnimation()
 	{
-		this.Stage().removeChild( this.mCurrentSprite );
-		
-		//---
-
-		let index = this.Assets().GetGSprites().indexOf( this.mCurrentSprite );
+		let index = this.mGSprites.indexOf( this.mCurrentSprite );
 		let next_index = index + 1;
-		if( next_index === this.Assets().GetGSprites().length )
-		{
-			this._Stop();
-			return;
-		}
+		if( next_index === this.mGSprites.length )
+			return true;
 
-		this.mCurrentSprite = this.Assets().GetGSprites()[next_index];
-		
-		//---
+		this.mCurrentSprite = this.mGSprites[next_index];
 
-		this.Stage().addChild( this.mGContinue );
-	}
-
-	_Tick( /*createjs.Event*/ iEvent, /*object*/ iData )
-	{
-		let that = iData.that;
-
-		switch( that.mState )
-		{
-			case cGame.eState.kIdle:
-				break;
-			case cGame.eState.kStartAnimation:
-				that._StartAnimation();
-				that.mState = cGame.eState.kAnimation;
-				break;
-			case cGame.eState.kAnimation:
-				break;
-			case cGame.eState.kStopAnimation:
-				that._StopAnimation();
-				that.mState = cGame.eState.kIdle;
-				break;
-		}
-		
-		that.Stage().update( iEvent );
+		return false;
 	}
 }

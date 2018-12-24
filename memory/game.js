@@ -8,181 +8,190 @@
 /// 29c355784a3921aa290371da87bce9c1617b8584ca6ac6fb17fb37ba4a07d191
 ///
 
-import { cDeck, cCard } from './deck.js';
-import { cCycle } from '../core/cycle.js';
-
 export 
-class cGame extends cCycle
+class cCard
 {
-	constructor( /*createjs.Stage*/ iStage, /*cAssets*/ iAssets, /*function*/ iNextCB, /*object*/ iNextCBData )
+	constructor( /*string*/ iName )
 	{
-		super( iStage, iAssets, iNextCB, iNextCBData );
-
-		 /*cDeck*/ this.mDeck = null;
-
-		/*number*/ this.mStartWait = 0;
-		/*object*/ this.mListener = null;
+		         /*number*/ this.mId = createjs.UID.get() * 7;
+		         /*string*/ this.mName = iName;
+		   /*cCard.eState*/ this.mState = cCard.eState.kHidden;
+		/*createjs.Bitmap*/ this.mGFace = null;
+		/*createjs.Bitmap*/ this.mGBack = null;
 	}
 	
 // public
-	Init()
+	static 
+	get eState()
 	{
-		super.Init();
+		return { kHidden: 'hidden', kFound: 'found', kTry: 'try' };
 	}
 	
-	Build( /*number*/ iNumberOfCards )
+// public
+	/*number*/
+	GetId()
 	{
-		super.Build();
+		return this.mId;
+	}
+	/*string*/
+	GetName()
+	{
+		return this.mName;
+	}
 
-		this.mDeck = new cDeck();
-		this.mDeck.Init( this.Assets(), iNumberOfCards );
-
-		this.mDeck.GetCards().forEach( iCard => 
+	/*cCard.eState*/
+	GetState()
+	{
+		return this.mState;
+	}
+	SetState( /*cCard.eState*/ iState )
+	{
+		switch( iState )
 		{
-			iCard.GetImage().on( 'click', this._CardClicked, null, false, { that: this, card: iCard } );
-		});
+			case cCard.eState.kFound:
+				this.mGFace.filters = [new createjs.ColorFilter( 1, 1, 1, 1, 100, 100, 100, 0 )];
+				let bounds = this.mGFace.getBounds();
+				this.mGFace.cache( bounds.x, bounds.y, bounds.width, bounds.height );
+				break;
+		}
+		
+		this.mState = iState;
+	}
 
-		this._Refresh();
+	/*createjs.Bitmap*/
+	GetImage()
+	{
+		return ( this.mState === cCard.eState.kHidden ) ? this.mGBack : this.mGFace;
+	}
+	SetImage( /*createjs.Bitmap*/ iGFace, /*createjs.Bitmap*/ iGBack )
+	{
+		this.mGFace = iGFace;
+		this.mGBack = iGBack;
+		
+		this.mGBack.cursor = 'pointer';
+	}
+}
+
+//---
+
+export 
+class cGame
+{
+	constructor()
+	{
+		        /*cCard[]*/ this.mCards = [];
+		         /*string*/ this.mSFlip = '';
+
+		   /*cGame.eState*/ this.mState = cGame.eState.kIdle;
 	}
 	
-	Start()
+// public
+	static 
+	get eState()
 	{
-		super.Start();
+		return {
+				kIdle: 'idle',
+				kTry: 'try',
+				kTest: 'test',
+				kBeginWait: 'begin-wait',
+				kEndWait: 'end-wait',
+				kWin: 'win'
+				};
+	}
 
-		createjs.Ticker.timingMode = createjs.Ticker.RAF;
-		this.mListener = createjs.Ticker.on( 'tick', this._Tick, null, false, { that: this } );
+// public
+	/*cCard[]*/
+	GetCards()
+	{
+		return this.mCards;
+	}
+
+	/*cGame.eState*/
+	GetState()
+	{
+		return this.mState;
+	}
+	SetState( /*cGame.eState*/ iState )
+	{
+		this.mState = iState;
+		
+		if( this.mState === cGame.eState.kTry || this.mState === cGame.eState.kTest )
+			/*let instance =*/ createjs.Sound.play( this.mSFlip );
+	}
+	
+	Init( /*cAssets*/ iAssets, /*number*/ iNumber )
+	{
+		this.mCards = [];
+		this.mSFlip = iAssets.GetSFlip();
+		
+		let cards = Array.from( Array( iAssets.GetGCards().length ).keys() ); // Otherwise, splice() remove entry in Assets
+		let number = Math.min( iNumber, iAssets.GetGCards().length );
+		let number_of_total_cards = number * 2;
+		while( this.mCards.length != number_of_total_cards )
+		{
+			// Get a random card ( mainly if iNumber < iCardsIds.length )
+			let index = Math.floor( Math.random() * cards.length ); // https://www.w3schools.com/js/js_random.asp
+			index = cards.splice( index, 1 )[0];
+
+			let card = iAssets.GetGCards()[index];
+			
+			let card1 = new cCard( card.id );
+			card1.SetImage( card.image.clone(), iAssets.GetGBack().clone() )
+			this.mCards.push( card1 );
+
+			let card2 = new cCard( card.id );
+			card2.SetImage( card.image.clone(), iAssets.GetGBack().clone() )
+			this.mCards.push( card2 );
+		}
+
+		this._Shuffle();
+	}
+	
+	/*boolean*/
+	Win()
+	{
+		return this.mCards.every( iCard => iCard.GetState() === cCard.eState.kFound );
+	}
+	
+	/*boolean*/
+	Check()
+	{
+		// Every cards to test
+		let cards = this.mCards.filter( iCard => iCard.GetState() === cCard.eState.kTry );
+		if( cards.length !== 2 )
+			return false;
+		
+		// New state of the tested cards
+		// Ok: every tested cards have the same name
+		// Bad: at least one tested card have not the same name
+		if( cards.every( iCard => iCard.GetName() === cards[0].GetName() ) )
+			return true
+		
+		return false;
+	}
+	
+	Process()
+	{
+		let new_state = this.Check() ? cCard.eState.kFound : cCard.eState.kHidden;
+		
+		// Update the state of the tested cards
+		this.mCards.forEach( iCard =>
+		{
+			if( iCard.GetState() === cCard.eState.kTry )
+				iCard.SetState( new_state );
+		});
 	}
 	
 // private
-	_Stop()
+	_Shuffle()
 	{
-		// It's commented to keep all cards displayed during the win screen
-		// this.Stage().removeAllChildren();
-
-		createjs.Ticker.off( 'tick', this.mListener );
-		
-		super._Stop();
-	}
-	
-	_Refresh()
-	{
-		this.Stage().removeAllChildren();
-
-		this._PlaceCards();
-
-		let cards = this.mDeck.GetCards();
-		cards.forEach( iCard => this.Stage().addChild( iCard.GetImage() ) );
-	}
-	
-	_PlaceCards()
-	{
-		let cards = this.mDeck.GetCards();
-		let img0 = cards[0].GetImage();
-		let card_number_per_line = cards.length / 2;
-		let cards_width_per_line = img0.getBounds().width * card_number_per_line;
-		let cards_spaces_width_per_line = cards_width_per_line + ( card_number_per_line - 1 ) * 20;
-
-		let start_x = this.Stage().canvas.width / 2 - cards_spaces_width_per_line / 2;
-		let x = start_x;
-
-		let half_height = this.Stage().canvas.height / 2;
-		let y1 = half_height / 2 - img0.getBounds().height / 2;
-		let y2 = half_height + y1;
-
-		cards.forEach( ( iCard, iIndex ) => 
+		for( let i = this.mCards.length - 1; i > 0; i-- )
 		{
-			if( !( iIndex % card_number_per_line ) )
-				x = start_x;
+			let j = Math.floor( Math.random() * ( i + 1 ) );
 			
-			let img = iCard.GetImage();
-			
-			img.x = x;
-			img.y = ( iIndex < card_number_per_line ) ? y1 : y2;
-
-			x += img.getBounds().width + 20;
-		});
-	}
-
-	//---
-	
-	_CardClicked( /*createjs.Event*/ iEvent, /*object*/ iData )
-	{
-		let that = iData.that;
-		let card = iData.card;
-
-		switch( that.mDeck.GetState() )
-		{
-			case cDeck.eState.kIdle:
-				if( card.GetState() !== cCard.eState.kHidden )
-					break;
-
-				card.SetState( cCard.eState.kTry );
-				that.mDeck.SetState( cDeck.eState.kTry );
-				that._Refresh();
-				break;
-			case cDeck.eState.kTry:
-				if( card.GetState() !== cCard.eState.kHidden )
-					break;
-					
-				that.mStartWait = Date.now();
-
-				card.SetState( cCard.eState.kTry );
-				that.mDeck.SetState( cDeck.eState.kTest );
-				that._Refresh();
-				break;
-			// case cDeck.eState.kTest:
-			// 	break;
-			// To not wait between begin/end wait
-			// case cDeck.eState.kBeginWait:
-				// that.mDeck.Process();
-				// that.mDeck.SetState( cDeck.eState.kIdle );
-				// that._CardClicked( iEvent, iData );
-				// break;
-			// case cDeck.eState.kEndWait:
-			// 	break;
+			let x = this.mCards[i];
+			this.mCards[i] = this.mCards[j];
+			this.mCards[j] = x;
 		}
-	}
-	
-	_Tick( /*createjs.Event*/ iEvent, /*object*/ iData )
-	{
-		let that = iData.that;
-
-		switch( that.mDeck.GetState() )
-		{
-			case cDeck.eState.kIdle:
-				if( that.mDeck.Win() )
-				{
-					iEvent.remove();
-					that._Stop();
-				}
-				break;
-			case cDeck.eState.kTest:
-				if( that.mDeck.Check() )
-				{
-					that.mDeck.Process();
-					that.mDeck.SetState( cDeck.eState.kIdle );
-					that._Refresh();
-				}
-				else
-				{
-					that.mDeck.SetState( cDeck.eState.kBeginWait );
-				}
-				break;
-			case cDeck.eState.kBeginWait:
-				let delta = Date.now() - that.mStartWait;
-				if( delta < 1 * 1000 )
-					break;
-
-				that.mDeck.SetState( cDeck.eState.kEndWait );
-				that._Refresh();
-				break;
-			case cDeck.eState.kEndWait:
-				that.mDeck.Process();
-				that.mDeck.SetState( cDeck.eState.kIdle );
-				that._Refresh();
-				break;
-		}
-		
-		that.Stage().update( iEvent );
 	}
 }

@@ -13,11 +13,9 @@ import { cAssets as cAssetsA } from '../core/assets.js';
 export 
 class cAssets extends cAssetsA
 {
-	constructor( /*createjs.Stage*/ iStage, /*function*/ iNextCB, /*object*/ iNextCBData )
+	constructor()
 	{
-		super( iStage, iNextCB, iNextCBData );
-
-		               /*createjs.Container*/ this.mGProgress = null;
+		super();
 
 		                           /*string*/ this.mSFlip = '';
 		                  /*createjs.Bitmap*/ this.mGBack = null;
@@ -51,32 +49,10 @@ class cAssets extends cAssetsA
 	{
 		super.Load();
 		
-		this._BuildProgress();
-
 		this._LoadBack();
 	}
 
 // private
-	_BuildProgress()
-	{
-		let gprogress = new createjs.Shape();
-		gprogress.graphics.beginFill( 'rgba( 255, 0, 0, 0.75 )' ).drawRect( 0, 0, 1, 40 ).endFill();
-
-		// To be able to use scaleX on its child without scaling x/y of the container
-		this.mGProgress = new createjs.Container();
-		this.mGProgress.addChild( gprogress );
-
-		this.mGProgress.x = this.Stage().canvas.width / 2 - 600 / 2;
-		this.mGProgress.y = this.Stage().canvas.height / 2 - 40 / 2;
-
-		this.Stage().addChild( this.mGProgress );
-	}
-	_RefreshProgress( /*number*/ iProgress )
-	{
-		this.mGProgress.getChildAt( 0 ).scaleX = iProgress;
-		this.Stage().update();
-	}
-
 	_LoadBack()
 	{
 		let loader = new createjs.LoadQueue( false );
@@ -92,17 +68,6 @@ class cAssets extends cAssetsA
 		let bounds = that.mGBack.getBounds();
 		that.mGBack.setBounds( bounds.x, bounds.y, bounds.width, bounds.height );
 		
-		//---
-		
-		// let gtext = new createjs.Text( 'Back Loaded ...', 'bold 20px Arial', '#000000' );
-		// gtext.textAlign = 'center';
-		// gtext.textBaseline = 'middle';
-		// gtext.x = that.Stage().canvas.width / 2;
-		// gtext.y = 20 * 2;
-
-		// that.Stage().addChild( gtext );
-		// that.Stage().update( iEvent );
-
 		//---
 		
 		that._LoadCards();
@@ -133,22 +98,12 @@ class cAssets extends cAssetsA
 		img.setBounds( bounds.x, bounds.y, bounds.width, bounds.height );
 		that.mGCards.push( { 'id': item.id, 'image': img } );
 
-		//---
-		
-		// let gtext = new createjs.Text( 'Card Loaded: ' + item.id + '...', 'bold 20px Arial', '#000000' );
-		// gtext.textAlign = 'center';
-		// gtext.textBaseline = 'middle';
-		// gtext.x = that.Stage().canvas.width / 2;
-		// gtext.y = 20 * ( 2 + that.mGCards.length );
-
-		// that.Stage().addChild( gtext );
-		// that.Stage().update( iEvent );
 	}
 	_ProgressCards( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
 		let that = iData.that;
 		
-		that._RefreshProgress( iEvent.loaded * 600 );
+		that._SetProgress( iEvent.loaded );
 	}
 	_BuildCards( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
@@ -171,17 +126,6 @@ class cAssets extends cAssetsA
 		
 		that.mSFlip = that.Config().flip.id; //loader.getResult( that.Config().flip.id );
 		
-		//---
-		
-		// let gtext = new createjs.Text( 'Sound Loaded: ' + that.mSFlip + '...', 'bold 20px Arial', '#000000' );
-		// gtext.textAlign = 'center';
-		// gtext.textBaseline = 'middle';
-		// gtext.x = that.Stage().canvas.width / 2;
-		// gtext.y = 20 * ( 2 + that.mGCards.length + 1 );
-
-		// that.Stage().addChild( gtext );
-		// that.Stage().update( iEvent );
-
 		//---
 		
 		that._Finish();

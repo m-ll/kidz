@@ -9,7 +9,7 @@
 ///
 
 export 
-class cCycle
+class cUI
 {
 	constructor( /*createjs.Stage*/ iStage, /*cAssets*/ iAssets, /*function*/ iNextCB, /*object*/ iNextCBData )
 	{

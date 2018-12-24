@@ -13,9 +13,9 @@ import { cAssets as cAssetsA } from '../core/assets.js';
 export 
 class cAssets extends cAssetsA
 {
-	constructor( /*createjs.Stage*/ iStage, /*function*/ iNextCB, /*object*/ iNextCBData )
+	constructor()
 	{
-		super( iStage, iNextCB, iNextCBData );
+		super();
 
 		         /*createjs.Bitmap*/ this.mGBackground = null;
 		/*createjs.DisplayObject[]*/ this.mGSprites = [];
@@ -70,17 +70,6 @@ class cAssets extends cAssetsA
 		
 		//---
 		
-		let gtext = new createjs.Text( 'Background Loaded ...', 'bold 20px Arial', '#000000' );
-		gtext.textAlign = 'center';
-		gtext.textBaseline = 'middle';
-		gtext.x = that.Stage().canvas.width / 2;
-		gtext.y = 20 * 2;
-
-		that.Stage().addChild( gtext );
-		that.Stage().update( iEvent );
-
-		//---
-		
 		that._LoadSprites();
 	}
 	
@@ -95,6 +84,7 @@ class cAssets extends cAssetsA
 		let loader = new createjs.LoadQueue( false );
 		loader.on( 'complete', this._BuildSprites, null, false, { that: this } );
 		loader.on( 'fileload', this._BuildSprite, null, false, { that: this } );
+		loader.on( 'progress', this._ProgressSprites, null, false, { that: this } );
 		loader.loadManifest( manifest, true, 'assets/' );
 	}
 	_BuildSprite( /*createjs.Event*/ iEvent, /*object*/ iData )
@@ -128,19 +118,13 @@ class cAssets extends cAssetsA
 		}
 
 		that.mTSprites.push( level.tweens ); //TODO: maybe get them in game as they are not really assets
-		
-		//---
-		
-		let gtext = new createjs.Text( 'Sprite Loaded: ' + level.id + '...', 'bold 20px Arial', '#000000' );
-		gtext.textAlign = 'center';
-		gtext.textBaseline = 'middle';
-		gtext.x = that.Stage().canvas.width / 2;
-		gtext.y = 20 * ( 2 + that.mGSprites.length );
-
-		that.Stage().addChild( gtext );
-		that.Stage().update( iEvent );
 	}
-
+	_ProgressSprites( /*createjs.Event*/ iEvent, /*object*/ iData )
+	{
+		let that = iData.that;
+		
+		that._SetProgress( iEvent.loaded );
+	}
 	_BuildSprites( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
 		let that = iData.that;

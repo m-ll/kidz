@@ -11,13 +11,11 @@
 export 
 class cAssets
 {
-	constructor( /*createjs.Stage*/ iStage, /*function*/ iNextCB, /*object*/ iNextCBData )
+	constructor()
 	{
-		/*createjs.Stage*/ this.mStage = iStage;
-		      /*function*/ this.mNextCB = iNextCB;
-		        /*object*/ this.mNextCBData = iNextCBData;
-		
-		          /*json*/ this.mConfig = null;
+		   /*json*/ this.mConfig = null;
+		 /*number*/ this.mProgress = 0;
+		/*boolean*/ this.mComplete = false;
 	}
 	
 // public
@@ -26,13 +24,12 @@ class cAssets
 	{
 		return this.mConfig;
 	}
-
-	/*createjs.Stage*/
-	Stage()
+	/*boolean*/ 
+	IsCompleted()
 	{
-		return this.mStage;
+		return this.mComplete;
 	}
-
+	
 // public
 	Init( /*json*/ iConfig )
 	{
@@ -42,11 +39,20 @@ class cAssets
 	Load()
 	{
 	}
-
+	
 // protected
+	/*number*/ 
+	_GetProgress()
+	{
+		return this.mProgress;
+	}
+	_SetProgress( /*number*/ iProgress )
+	{
+		this.mProgress = iProgress;
+	}
+
 	_Finish()
 	{
-		this.mStage.removeAllChildren();
-		this.mNextCB.call( this.mNextCBData );
+		this.mComplete = true;
 	}
 }

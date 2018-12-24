@@ -8,105 +8,33 @@
 /// 29c355784a3921aa290371da87bce9c1617b8584ca6ac6fb17fb37ba4a07d191
 ///
 
-import { cCycle } from '../core/cycle.js';
-
 export 
-class cWin extends cCycle
+class cWin
 {
-	constructor( /*createjs.Stage*/ iStage, /*cAssets*/ iAssets, /*function*/ iNextCB, /*object*/ iNextCBData )
+	constructor( /*string*/ iTextLabel, /*string*/ iTextButton )
 	{
-		super( iStage, iAssets, iNextCB, iNextCBData );
-
-		/*createjs.Container*/ this.mGYouWin = null;
-		/*createjs.Container*/ this.mGPlayAgain = null;
-		            /*object*/ this.mListener = null;
+		/*string*/ this.mTextLabel = iTextLabel;
+		/*string*/ this.mTextButton = iTextButton;
 	}
 	
 // public
-	Init()
+	/*string*/
+	GetTextLabel()
 	{
-		super.Init();
+		return this.mTextLabel;
+	}
+	SetTextLabel( /*string*/ iText )
+	{
+		this.mTextLabel = iText;
 	}
 	
-	Build()
+	/*string*/
+	GetTextButton()
 	{
-		super.Build();
-
-		this._BuildYouWin();
-		this._BuildPlayAgain();
+		return this.mTextButton;
 	}
-	
-	Start()
+	SetTextButton( /*string*/ iText )
 	{
-		super.Start();
-
-		createjs.Ticker.timingMode = createjs.Ticker.RAF;
-		this.mListener = createjs.Ticker.on( 'tick', this._Tick, null, false, { that: this } );
-	}
-	
-// private
-	_BuildYouWin()
-	{
-		// let bg = new createjs.Shape();
-		// bg.graphics.beginFill( 'rgba( 255, 0, 0, 0.5 )' ).drawRoundRect( 0, 0, 250, 40, 10 );
-
-		let gtext = new createjs.Text( 'You win !', 'bold 20px Arial', '#000000' );
-		gtext.textAlign = 'center';
-		gtext.textBaseline = 'middle';
-		gtext.x = 250 / 2;
-		gtext.y = 40 / 2;
-
-		this.mGYouWin = new createjs.Container();
-		this.mGYouWin.x = this.Stage().canvas.width / 2 - 250 / 2;
-		this.mGYouWin.y = this.Stage().canvas.height / 2 - 40 / 2 - 20;
-		// this.mGYouWin.addChild( bg, gtext );
-		this.mGYouWin.addChild( gtext );
-
-		this.Stage().addChild( this.mGYouWin );
-	}
-	_BuildPlayAgain()
-	{
-		let bg = new createjs.Shape();
-		bg.graphics.beginFill( 'rgba( 255, 0, 0, 0.5 )' ).drawRoundRect( 0, 0, 250, 40, 10 );
-
-		let gtext = new createjs.Text( 'Play again ?', 'bold 20px Arial', '#000000' );
-		gtext.textAlign = 'center';
-		gtext.textBaseline = 'middle';
-		gtext.x = 250 / 2;
-		gtext.y = 40 / 2;
-
-		this.mGPlayAgain = new createjs.Container();
-		this.mGPlayAgain.x = this.Stage().canvas.width / 2 - 250 / 2;
-		this.mGPlayAgain.y = this.Stage().canvas.height / 2 - 40 / 2 + 20;
-		this.mGPlayAgain.addChild( bg, gtext );
-		this.mGPlayAgain.on( 'click', this._PlayAgain, null, false, { that: this } );
-		this.mGPlayAgain.cursor = 'pointer';
-
-		this.Stage().addChild( this.mGPlayAgain );
-	}
-	
-	_Stop()
-	{
-		this.Stage().removeChild( this.mGYouWin );
-		this.Stage().removeChild( this.mGPlayAgain );
-
-		createjs.Ticker.off( 'tick', this.mListener );
-		
-		super._Stop();
-	}
-	
-	_PlayAgain( /*createjs.Event*/ iEvent, /*object*/ iData )
-	{
-		let that = iData.that;
-		
-		iEvent.remove();
-		that._Stop();
-	}
-	
-	_Tick( /*createjs.Event*/ iEvent, /*object*/ iData )
-	{
-		let that = iData.that;
-
-		that.Stage().update( iEvent );
+		this.mTextButton = iText;
 	}
 }
