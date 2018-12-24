@@ -14,14 +14,14 @@ import { cCycle } from '../core/cycle.js';
 export 
 class cGame extends cCycle
 {
-	constructor( iStage, iAssets, iNextCB, iNextCBData )
+	constructor( /*createjs.Stage*/ iStage, /*cAssets*/ iAssets, /*function*/ iNextCB, /*object*/ iNextCBData )
 	{
 		super( iStage, iAssets, iNextCB, iNextCBData );
 
-		this.mDeck = null;
+		 /*cDeck*/ this.mDeck = null;
 
-		this.mStartWait = 0;
-		this.mListener = null;
+		/*number*/ this.mStartWait = 0;
+		/*object*/ this.mListener = null;
 	}
 	
 // public
@@ -30,7 +30,7 @@ class cGame extends cCycle
 		super.Init();
 	}
 	
-	Build( iNumberOfCards )
+	Build( /*number*/ iNumberOfCards )
 	{
 		super.Build();
 
@@ -39,7 +39,7 @@ class cGame extends cCycle
 
 		this.mDeck.GetCards().forEach( iCard => 
 		{
-			iCard.GetImage().on( 'click', this._CardClicked, null, false, [this, iCard] );
+			iCard.GetImage().on( 'click', this._CardClicked, null, false, { that: this, card: iCard } );
 		});
 
 		this._Refresh();
@@ -50,7 +50,7 @@ class cGame extends cCycle
 		super.Start();
 
 		createjs.Ticker.timingMode = createjs.Ticker.RAF;
-		this.mListener = createjs.Ticker.on( 'tick', this._Tick, null, false, this );
+		this.mListener = createjs.Ticker.on( 'tick', this._Tick, null, false, { that: this } );
 	}
 	
 // private
@@ -105,10 +105,10 @@ class cGame extends cCycle
 
 	//---
 	
-	_CardClicked( iEvent, iData )
+	_CardClicked( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
-		let that = iData[0];
-		let card = iData[1];
+		let that = iData.that;
+		let card = iData.card;
 
 		switch( that.mDeck.GetState() )
 		{
@@ -143,9 +143,9 @@ class cGame extends cCycle
 		}
 	}
 	
-	_Tick( iEvent, iData )
+	_Tick( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
-		let that = iData;
+		let that = iData.that;
 
 		switch( that.mDeck.GetState() )
 		{

@@ -13,13 +13,15 @@ import { cCycle } from '../core/cycle.js';
 export 
 class cGame extends cCycle
 {
-	constructor( iStage, iAssets, iNextCB, iNextCBData )
+	constructor( /*createjs.Stage*/ iStage, /*cAssets*/ iAssets, /*function*/ iNextCB, /*object*/ iNextCBData )
 	{
 		super( iStage, iAssets, iNextCB, iNextCBData );
 
-		this.mState = cGame.eState.kIdle;
-		this.mCurrentSprite = null;
-		this.mGContinue = null;
+		          /*cGame.eState*/ this.mState = cGame.eState.kIdle;
+		/*createjs.DisplayObject*/ this.mCurrentSprite = null;
+				 /*createjs.Text*/ this.mGContinue = null;
+				 
+		                /*object*/ this.mListener = null;
 	}
 	
 // public
@@ -67,7 +69,7 @@ class cGame extends cCycle
 		super.Start();
 
 		createjs.Ticker.timingMode = createjs.Ticker.RAF;
-		this.mListener = createjs.Ticker.on( 'tick', this._Tick, null, false, this );
+		this.mListener = createjs.Ticker.on( 'tick', this._Tick, null, false, { that: this } );
 	}
 	
 // private
@@ -81,7 +83,7 @@ class cGame extends cCycle
 		super._Stop();
 	}
 	
-	_KeyHit( iEvent )
+	_KeyHit( /*object*/ iEvent )
 	{
 		let event = iEvent;
 		if( !event )
@@ -164,9 +166,9 @@ class cGame extends cCycle
 		this.Stage().addChild( this.mGContinue );
 	}
 
-	_Tick( iEvent, iData )
+	_Tick( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
-		let that = iData;
+		let that = iData.that;
 
 		switch( that.mState )
 		{

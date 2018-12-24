@@ -13,31 +13,34 @@ import { cAssets as cAssetsA } from '../core/assets.js';
 export 
 class cAssets extends cAssetsA
 {
-	constructor( iStage, iNextCB, iNextCBData )
+	constructor( /*createjs.Stage*/ iStage, /*function*/ iNextCB, /*object*/ iNextCBData )
 	{
 		super( iStage, iNextCB, iNextCBData );
 
-		this.mGBackground = null;
-		this.mGSprites = [];
-		this.mTSprites = [];
+		         /*createjs.Bitmap*/ this.mGBackground = null;
+		/*createjs.DisplayObject[]*/ this.mGSprites = [];
+		                  /*json[]*/ this.mTSprites = [];
 	}
 	
 // public
+	/*createjs.Bitmap*/
 	GetGBackground()
 	{
 		return this.mGBackground;
 	}
+	/*createjs.DisplayObject[]*/
 	GetGSprites()
 	{
 		return this.mGSprites;
 	}
+	/*json[]*/
 	GetTSprites()
 	{
 		return this.mTSprites;
 	}
 
 // public
-	Init( iConfig )
+	Init( /*json*/ iConfig )
 	{
 		super.Init( iConfig );
 	}
@@ -53,13 +56,13 @@ class cAssets extends cAssetsA
 	_LoadBackground()
 	{
 		let loader = new createjs.LoadQueue( false );
-		loader.on( 'complete', this._BuildBackground, null, false, this );
+		loader.on( 'complete', this._BuildBackground, null, false, { that: this } );
 		loader.loadFile( { 'id': this.Config().background.id, 'src': this.Config().background.name }, true, 'assets/' );
 	}
-	_BuildBackground( iEvent, iData )
+	_BuildBackground( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
 		let loader = iEvent.target;
-		let that = iData;
+		let that = iData.that;
 		
 		that.mGBackground = new createjs.Bitmap( loader.getResult( that.Config().background.id ) );
 		let bounds = that.mGBackground.getBounds();
@@ -90,14 +93,14 @@ class cAssets extends cAssetsA
 		});
 
 		let loader = new createjs.LoadQueue( false );
-		loader.on( 'complete', this._BuildSprites, null, false, this );
-		loader.on( 'fileload', this._BuildSprite, null, false, this );
+		loader.on( 'complete', this._BuildSprites, null, false, { that: this } );
+		loader.on( 'fileload', this._BuildSprite, null, false, { that: this } );
 		loader.loadManifest( manifest, true, 'assets/' );
 	}
-	_BuildSprite( iEvent, iData )
+	_BuildSprite( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
 		let loader = iEvent.target;
-		let that = iData;
+		let that = iData.that;
 		let item = iEvent.item;
 		
 		let level = that.Config().levels.find( iLevel => iLevel.id === item.id );
@@ -138,9 +141,9 @@ class cAssets extends cAssetsA
 		that.Stage().update( iEvent );
 	}
 
-	_BuildSprites( iEvent, iData )
+	_BuildSprites( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
-		let that = iData;
+		let that = iData.that;
 		
 		that._Finish();
 	}

@@ -11,28 +11,30 @@
 export 
 class cAssets
 {
-	constructor( iStage, iNextCB, iNextCBData )
+	constructor( /*createjs.Stage*/ iStage, /*function*/ iNextCB, /*object*/ iNextCBData )
 	{
-		this.mStage = iStage;
-		this.mNextCB = iNextCB;
-		this.mNextCBData = iNextCBData;
+		/*createjs.Stage*/ this.mStage = iStage;
+		      /*function*/ this.mNextCB = iNextCB;
+		        /*object*/ this.mNextCBData = iNextCBData;
 		
-		this.mConfig = null;
+		          /*json*/ this.mConfig = null;
 	}
 	
 // public
+	/*json*/ 
 	Config()
 	{
 		return this.mConfig;
 	}
 
+	/*createjs.Stage*/
 	Stage()
 	{
 		return this.mStage;
 	}
 
 // public
-	Init( iConfig )
+	Init( /*json*/ iConfig )
 	{
 		this.mConfig = iConfig;
 	}

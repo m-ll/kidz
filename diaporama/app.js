@@ -22,11 +22,11 @@ class cApp extends cAppA
 	{
 		super();
 
-		this.mAssets = null;
+		/*cAssets*/ this.mAssets = null;
 	}
 	
 // public
-	Init( iConfig, iCanvasId )
+	Init( /*json*/ iConfig, /*string*/ iCanvasId )
 	{
 		super.Init( iConfig, iCanvasId );
 	}

@@ -13,33 +13,36 @@ import { cAssets as cAssetsA } from '../core/assets.js';
 export 
 class cAssets extends cAssetsA
 {
-	constructor( iStage, iNextCB, iNextCBData )
+	constructor( /*createjs.Stage*/ iStage, /*function*/ iNextCB, /*object*/ iNextCBData )
 	{
 		super( iStage, iNextCB, iNextCBData );
 
-		this.mGProgress = null;
+		               /*createjs.Container*/ this.mGProgress = null;
 
-		this.mSFlip = '';
-		this.mGBack = null;
-		this.mGCards = [];
+		                           /*string*/ this.mSFlip = '';
+		                  /*createjs.Bitmap*/ this.mGBack = null;
+		/*{string,createjs.DisplayObject}[]*/ this.mGCards = [];
 	}
 	
 // public
+	/*string*/
 	GetSFlip()
 	{
 		return this.mSFlip;
 	}
+	/*createjs.Bitmap*/
 	GetGBack()
 	{
 		return this.mGBack;
 	}
+	/*{string,createjs.DisplayObject}[]*/
 	GetGCards()
 	{
 		return this.mGCards;
 	}
 
 // public
-	Init( iConfig )
+	Init( /*json*/ iConfig )
 	{
 		super.Init( iConfig );
 	}
@@ -68,7 +71,7 @@ class cAssets extends cAssetsA
 
 		this.Stage().addChild( this.mGProgress );
 	}
-	_RefreshProgress( iProgress )
+	_RefreshProgress( /*number*/ iProgress )
 	{
 		this.mGProgress.getChildAt( 0 ).scaleX = iProgress;
 		this.Stage().update();
@@ -77,13 +80,13 @@ class cAssets extends cAssetsA
 	_LoadBack()
 	{
 		let loader = new createjs.LoadQueue( false );
-		loader.on( 'complete', this._BuildBack, null, false, this );
+		loader.on( 'complete', this._BuildBack, null, false, { that: this } );
 		loader.loadFile( { 'id': this.Config().back.id, 'src': this.Config().back.name }, true, 'assets/' );
 	}
-	_BuildBack( iEvent, iData )
+	_BuildBack( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
 		let loader = iEvent.target;
-		let that = iData;
+		let that = iData.that;
 		
 		that.mGBack = new createjs.Bitmap( loader.getResult( that.Config().back.id ) );
 		let bounds = that.mGBack.getBounds();
@@ -114,15 +117,15 @@ class cAssets extends cAssetsA
 		});
 
 		let loader = new createjs.LoadQueue( false );
-		loader.on( 'complete', this._BuildCards, null, false, this );
-		loader.on( 'fileload', this._BuildCard, null, false, this );
-		loader.on( 'progress', this._ProgressCards, null, false, this );
+		loader.on( 'complete', this._BuildCards, null, false, { that: this } );
+		loader.on( 'fileload', this._BuildCard, null, false, { that: this } );
+		loader.on( 'progress', this._ProgressCards, null, false, { that: this } );
 		loader.loadManifest( manifest, true, 'assets/' );
 	}
-	_BuildCard( iEvent, iData )
+	_BuildCard( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
 		let loader = iEvent.target;
-		let that = iData;
+		let that = iData.that;
 		let item = iEvent.item;
 		
 		let img = new createjs.Bitmap( loader.getResult( item.id ) );
@@ -141,15 +144,15 @@ class cAssets extends cAssetsA
 		// that.Stage().addChild( gtext );
 		// that.Stage().update( iEvent );
 	}
-	_ProgressCards( iEvent, iData )
+	_ProgressCards( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
-		let that = iData;
+		let that = iData.that;
 		
 		that._RefreshProgress( iEvent.loaded * 600 );
 	}
-	_BuildCards( iEvent, iData )
+	_BuildCards( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
-		let that = iData;
+		let that = iData.that;
 		
 		that._LoadFlip();
 	}
@@ -158,13 +161,13 @@ class cAssets extends cAssetsA
 	{
 		let loader = new createjs.LoadQueue( false );
 		loader.installPlugin( createjs.Sound );
-		loader.on( 'complete', this._BuildFlip, null, false, this );
+		loader.on( 'complete', this._BuildFlip, null, false, { that: this } );
 		loader.loadFile( { 'id': this.Config().flip.id, 'src': this.Config().flip.name }, true, 'assets/' );
 	}
-	_BuildFlip( iEvent, iData )
+	_BuildFlip( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
 		// let loader = iEvent.target;
-		let that = iData;
+		let that = iData.that;
 		
 		that.mSFlip = that.Config().flip.id; //loader.getResult( that.Config().flip.id );
 		

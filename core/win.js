@@ -13,13 +13,13 @@ import { cCycle } from '../core/cycle.js';
 export 
 class cWin extends cCycle
 {
-	constructor( iStage, iAssets, iNextCB, iNextCBData )
+	constructor( /*createjs.Stage*/ iStage, /*cAssets*/ iAssets, /*function*/ iNextCB, /*object*/ iNextCBData )
 	{
 		super( iStage, iAssets, iNextCB, iNextCBData );
 
-		this.mGYouWin = null;
-		this.mGPlayAgain = null;
-		this.mListener = null;
+		/*createjs.Container*/ this.mGYouWin = null;
+		/*createjs.Container*/ this.mGPlayAgain = null;
+		            /*object*/ this.mListener = null;
 	}
 	
 // public
@@ -41,7 +41,7 @@ class cWin extends cCycle
 		super.Start();
 
 		createjs.Ticker.timingMode = createjs.Ticker.RAF;
-		this.mListener = createjs.Ticker.on( 'tick', this._Tick, null, false, this );
+		this.mListener = createjs.Ticker.on( 'tick', this._Tick, null, false, { that: this } );
 	}
 	
 // private
@@ -79,7 +79,7 @@ class cWin extends cCycle
 		this.mGPlayAgain.x = this.Stage().canvas.width / 2 - 250 / 2;
 		this.mGPlayAgain.y = this.Stage().canvas.height / 2 - 40 / 2 + 20;
 		this.mGPlayAgain.addChild( bg, gtext );
-		this.mGPlayAgain.on( 'click', this._PlayAgain, null, false, this );
+		this.mGPlayAgain.on( 'click', this._PlayAgain, null, false, { that: this } );
 		this.mGPlayAgain.cursor = 'pointer';
 
 		this.Stage().addChild( this.mGPlayAgain );
@@ -95,17 +95,17 @@ class cWin extends cCycle
 		super._Stop();
 	}
 	
-	_PlayAgain( iEvent, iData )
+	_PlayAgain( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
-		let that = iData;
+		let that = iData.that;
 		
 		iEvent.remove();
 		that._Stop();
 	}
 	
-	_Tick( iEvent, iData )
+	_Tick( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
-		let that = iData;
+		let that = iData.that;
 
 		that.Stage().update( iEvent );
 	}

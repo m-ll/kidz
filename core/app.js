@@ -13,25 +13,27 @@ class cApp
 {
 	constructor()
 	{
-		this.mConfig = null;
-		this.mCanvasId = '';
+		          /*json*/ this.mConfig = null;
+		        /*string*/ this.mCanvasId = '';
 
-		this.mStage = null;
+		/*createjs.Stage*/ this.mStage = null;
 	}
 	
 // public
+	/*createjs.Stage*/
 	Stage()
 	{
 		return this.mStage;
 	}
 	
+	/*json*/
 	Config()
 	{
 		return this.mConfig;
 	}
 	
 // public
-	Init( iConfig, iCanvasId )
+	Init( /*json*/ iConfig, /*string*/ iCanvasId )
 	{
 		this.mConfig = iConfig;
 		this.mCanvasId = iCanvasId;

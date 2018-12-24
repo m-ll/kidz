@@ -11,13 +11,13 @@
 export 
 class cCard
 {
-	constructor( iName )
+	constructor( /*string*/ iName )
 	{
-		this.mId = createjs.UID.get() * 7;
-		this.mName = iName;
-		this.mState = cCard.eState.kHidden;
-		this.mGFace = null;
-		this.mGBack = null;
+		         /*number*/ this.mId = createjs.UID.get() * 7;
+		         /*string*/ this.mName = iName;
+		   /*cCard.eState*/ this.mState = cCard.eState.kHidden;
+		/*createjs.Bitmap*/ this.mGFace = null;
+		/*createjs.Bitmap*/ this.mGBack = null;
 	}
 	
 // public
@@ -28,20 +28,23 @@ class cCard
 	}
 	
 // public
+	/*number*/
 	GetId()
 	{
 		return this.mId;
 	}
+	/*string*/
 	GetName()
 	{
 		return this.mName;
 	}
 
+	/*cCard.eState*/
 	GetState()
 	{
 		return this.mState;
 	}
-	SetState( iState )
+	SetState( /*cCard.eState*/ iState )
 	{
 		switch( iState )
 		{
@@ -55,11 +58,12 @@ class cCard
 		this.mState = iState;
 	}
 
+	/*createjs.Bitmap*/
 	GetImage()
 	{
 		return ( this.mState === cCard.eState.kHidden ) ? this.mGBack : this.mGFace;
 	}
-	SetImage( iGFace, iGBack )
+	SetImage( /*createjs.Bitmap*/ iGFace, /*createjs.Bitmap*/ iGBack )
 	{
 		this.mGFace = iGFace;
 		this.mGBack = iGBack;
@@ -75,11 +79,11 @@ class cDeck
 {
 	constructor()
 	{
-		this.mCards = [];
-		this.mGBack = null;
-		this.mSFlip = '';
+		        /*cCard[]*/ this.mCards = [];
+		/*createjs.Bitmap*/ this.mGBack = null;
+		         /*string*/ this.mSFlip = '';
 
-		this.mState = cDeck.eState.kIdle;
+		   /*cDeck.eState*/ this.mState = cDeck.eState.kIdle;
 	}
 	
 // public
@@ -97,16 +101,18 @@ class cDeck
 	}
 
 // public
+	/*cCard[]*/
 	GetCards()
 	{
 		return this.mCards;
 	}
 
+	/*cDeck.eState*/
 	GetState()
 	{
 		return this.mState;
 	}
-	SetState( iState )
+	SetState( /*cDeck.eState*/ iState )
 	{
 		this.mState = iState;
 		
@@ -114,7 +120,7 @@ class cDeck
 			/*let instance =*/ createjs.Sound.play( this.mSFlip );
 	}
 	
-	Init( iAssets, iNumber )
+	Init( /*cAssets*/ iAssets, /*number*/ iNumber )
 	{
 		this.mSFlip = iAssets.GetSFlip();
 		
@@ -142,11 +148,13 @@ class cDeck
 		this._Shuffle();
 	}
 	
+	/*boolean*/
 	Win()
 	{
 		return this.mCards.every( iCard => iCard.GetState() === cCard.eState.kFound );
 	}
 	
+	/*boolean*/
 	Check()
 	{
 		// Every cards to test

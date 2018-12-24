@@ -13,12 +13,12 @@ import { cCycle } from '../core/cycle.js';
 export 
 class cFaf /* F(irst) A(nd) F(oremost): before assets loaded */ extends cCycle
 {
-	constructor( iStage, iNextCB, iNextCBData )
+	constructor( /*createjs.Stage*/ iStage, /*function*/ iNextCB, /*object*/ iNextCBData )
 	{
 		super( iStage, null, iNextCB, iNextCBData );
 
-		this.mGText = null;
-		this.mListener = null;
+		/*createjs.Text*/ this.mGWelcome = null;
+		       /*object*/ this.mListener = null;
 	}
 	
 // public
@@ -31,13 +31,13 @@ class cFaf /* F(irst) A(nd) F(oremost): before assets loaded */ extends cCycle
 	{
 		super.Build();
 
-		this.mGText = new createjs.Text( 'Welcome ...', 'bold 20px Arial', '#000000' );
-		this.mGText.textAlign = 'center';
-		this.mGText.textBaseline = 'middle';
-		this.mGText.x = this.Stage().canvas.width / 2;
-		this.mGText.y = 0; //this.Stage().canvas.height / 2;
+		this.mGWelcome = new createjs.Text( 'Welcome ...', 'bold 20px Arial', '#000000' );
+		this.mGWelcome.textAlign = 'center';
+		this.mGWelcome.textBaseline = 'middle';
+		this.mGWelcome.x = this.Stage().canvas.width / 2;
+		this.mGWelcome.y = 0;
 
-		this.Stage().addChild( this.mGText );
+		this.Stage().addChild( this.mGWelcome );
 	}
 	
 	Start()
@@ -45,7 +45,7 @@ class cFaf /* F(irst) A(nd) F(oremost): before assets loaded */ extends cCycle
 		super.Start();
 
 		createjs.Ticker.timingMode = createjs.Ticker.RAF;
-		this.mListener = createjs.Ticker.on( 'tick', this._Tick, null, false, this );
+		this.mListener = createjs.Ticker.on( 'tick', this._Tick, null, false, { that: this } );
 	}
 	
 // private
@@ -56,15 +56,15 @@ class cFaf /* F(irst) A(nd) F(oremost): before assets loaded */ extends cCycle
 		super._Stop();
 	}
 	
-	_Tick( iEvent, iData )
+	_Tick( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
-		let that = iData;
+		let that = iData.that;
 		
-		that.mGText.y += 10;
+		that.mGWelcome.y += 10;
 
-		if( that.mGText.y > that.Stage().canvas.height / 2 )
+		if( that.mGWelcome.y > that.Stage().canvas.height / 2 )
 		{
-			that.Stage().removeChild( that.mGText );
+			that.Stage().removeChild( that.mGWelcome );
 
 			iEvent.remove();
 			that._Stop();

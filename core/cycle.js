@@ -11,20 +11,22 @@
 export 
 class cCycle
 {
-	constructor( iStage, iAssets, iNextCB, iNextCBData )
+	constructor( /*createjs.Stage*/ iStage, /*cAssets*/ iAssets, /*function*/ iNextCB, /*object*/ iNextCBData )
 	{
-		this.mStage = iStage;
-		this.mAssets = iAssets;
-		this.mNextCB = iNextCB;
-		this.mNextCBData = iNextCBData;
+		/*createjs.Stage*/ this.mStage = iStage;
+		       /*cAssets*/ this.mAssets = iAssets;
+		      /*function*/ this.mNextCB = iNextCB;
+		        /*object*/ this.mNextCBData = iNextCBData;
 	}
 	
 // public
+	/*createjs.Stage*/
 	Stage()
 	{
 		return this.mStage;
 	}
 
+	/*cAssets*/
 	Assets()
 	{
 		return this.mAssets;
