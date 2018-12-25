@@ -19,10 +19,12 @@ class cAssets extends cCoreAssets
 
 							/*json*/ this.mLevels = null;
 							/*json*/ this.mTweens = null;
+							/*json*/ this.mSounds = null;
 									 
 		         /*createjs.Bitmap*/ this.mGBackground = null;
 		/*createjs.DisplayObject[]*/ this.mGSprites = [];
 		                  /*json[]*/ this.mTSprites = [];
+		                /*string[]*/ this.mSSprites = [];
 	}
 	
 // public
@@ -41,6 +43,11 @@ class cAssets extends cCoreAssets
 	{
 		return this.mTSprites;
 	}
+	/*string[]*/
+	GetSSprites()
+	{
+		return this.mSSprites;
+	}
 
 // public
 	Init( /*json*/ iConfig )
@@ -49,6 +56,7 @@ class cAssets extends cCoreAssets
 
 		this.mLevels = iConfig.levels;
 		this.mTweens = iConfig.tweens;
+		this.mSounds = iConfig.sounds;
 	}
 
 	Load()
@@ -65,7 +73,30 @@ class cAssets extends cCoreAssets
 		levels.forEach( level =>
 		{
 			this.mGSprites.push( this.GetAsset( level ).graphic );
+
 			this.mTSprites.push( this.mTweens.find( tween => tween.id === level ).tweens );
+
+			// In json file:
+			// "sounds":
+			// [
+			// 	{
+			// 		"id": "plane", 
+			// 		"sound": "plane-sound"
+			// 	}
+			// ],
+			// "assets":
+			// [
+			// 	{
+			// 		"id": "plane-sound", 
+			// 		"name": "plane.mp3" 
+			// 	},
+			// 	...
+			// ]
+			
+			let sound = undefined;
+			if( this.mSounds )
+				sound = this.mSounds.find( sound => sound.id === level );
+			this.mSSprites.push( sound ? sound.sound : undefined );
 		});
 		
 		super._Finish();

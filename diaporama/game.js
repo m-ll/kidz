@@ -16,6 +16,7 @@ class cGame
 				 /*createjs.Bitmap*/ this.mGBackground = null;
 		/*createjs.DisplayObject[]*/ this.mGSprites = [];
 						  /*json[]*/ this.mTSprites = [];
+						/*string[]*/ this.mSSprites = [];
 		  /*createjs.DisplayObject*/ this.mCurrentSprite = null;
 							
 					/*cGame.eState*/ this.mState = cGame.eState.kIdle;
@@ -61,6 +62,7 @@ class cGame
 		this.mGBackground = iAssets.GetGBackground();
 		this.mGSprites = iAssets.GetGSprites();
 		this.mTSprites = iAssets.GetTSprites();
+		this.mSSprites = iAssets.GetSSprites();
 		
 		this.mCurrentSprite = this.mGSprites[0];
 		let current_tweens = this.mTSprites[0];
@@ -106,6 +108,13 @@ class cGame
 		}
 		
 		tween.call( () => this.mState = cGame.eState.kStopAnimation/*, [], this*/ );
+
+		//---
+
+		//TODO: check with sounds: seems to go here in every ticks oO, maybe call Sound.stop() inside StopAnimation() ?
+		// console.log( 'start animation' );
+		if( this.mSSprites[index] )
+			/*let instance =*/ createjs.Sound.play( this.mSSprites[index] );
 	}
 
 	/*boolean*/
