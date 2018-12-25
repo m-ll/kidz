@@ -39,7 +39,7 @@ class cApp extends cAppA
 		this.mFaf = new cFaf( 'Welcome ...' );
 		
 		this.mAssets = new cAssets();
-		this.mAssets.Init( this.Config().assets );
+		this.mAssets.Init( this.Config() );
 
 		this.mGame = new cGame();
 		
@@ -74,7 +74,7 @@ class cApp extends cAppA
 	
 	_Game()
 	{
-		this.mGame.Init( this.mAssets, this.Config().count );
+		this.mGame.Init( this.mAssets, this.Config() );
 
 		let ui = new cGameUI( this.mGame, this.Stage(), this.mAssets, this._Win, this );
 		ui.Init();

@@ -118,7 +118,7 @@ class cAssets
 			let bounds = gsprite.getBounds();
 			gsprite.setBounds( bounds.x, bounds.y, bounds.width, bounds.height );
 
-			that.mGraphics.push( { 'id': asset.id, 'graphic': gsprite, 'tweens': asset.tweens } ); //TODO: maybe get them in game as they are not really assets
+			that.mGraphics.push( { 'id': asset.id, 'graphic': gsprite } );
 		}
 		else
 		{
@@ -126,7 +126,7 @@ class cAssets
 			let bounds = gsprite.getBounds();
 			gsprite.setBounds( bounds.x, bounds.y, bounds.width, bounds.height );
 			
-			that.mGraphics.push( { 'id': asset.id, 'graphic': gsprite, 'tweens': asset.tweens } );
+			that.mGraphics.push( { 'id': asset.id, 'graphic': gsprite } );
 		}
 	}
 	_ProgressGraphics( /*createjs.Event*/ iEvent, /*object*/ iData )

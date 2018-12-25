@@ -4,16 +4,10 @@
 		"plane", "butterfly"
 	],
 	
-	"assets":
+	"tweens":
 	[
-		{
-			"id": "background", 
-			"name": "background.png" 
-		},
 		{ 
 			"id": "plane", 
-			"name": "plane.png",
-
 			"tweens": 
 			[
 				{
@@ -31,17 +25,6 @@
 		},
 		{ 
 			"id": "butterfly", 
-			"name": "butterfly.png",
-
-			"spritesheet":
-			{
-				"ids": ["butterfly"],
-				"frames": { "regX": 0, "regY": 0, "width": 50, "height": 50, "count": 2 },
-				"animations": { "fly": [0, 1, "fly"] },
-				"framerate": 7
-			},
-			"start": "fly",
-
 			"tweens": 
 			[
 				{
@@ -65,6 +48,31 @@
 					"to": { "x": -50, "y": 450 }
 				}
 			]
+		}
+	],
+	
+	"assets":
+	[
+		{
+			"id": "background", 
+			"name": "background.png" 
+		},
+		{ 
+			"id": "plane", 
+			"name": "plane.png"
+		},
+		{ 
+			"id": "butterfly", 
+			"name": "butterfly.png",
+
+			"spritesheet":
+			{
+				"ids": ["butterfly"],
+				"frames": { "regX": 0, "regY": 0, "width": 50, "height": 50, "count": 2 },
+				"animations": { "fly": [0, 1, "fly"] },
+				"framerate": 7
+			},
+			"start": "fly"
 		}
 	]
 }

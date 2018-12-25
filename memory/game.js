@@ -119,17 +119,17 @@ class cGame
 			/*let instance =*/ createjs.Sound.play( this.mSFlip );
 	}
 	
-	Init( /*cAssets*/ iAssets, /*number*/ iNumber )
+	Init( /*cAssets*/ iAssets, /*json*/ iConfig )
 	{
 		this.mCards = [];
 		this.mSFlip = iAssets.GetSFlip();
 		
 		let cards = Array.from( Array( iAssets.GetGCards().length ).keys() ); // Otherwise, splice() remove entry in Assets
-		let number = Math.min( iNumber, iAssets.GetGCards().length );
+		let number = Math.min( iConfig.count, iAssets.GetGCards().length );
 		let number_of_total_cards = number * 2;
 		while( this.mCards.length != number_of_total_cards )
 		{
-			// Get a random card ( mainly if iNumber < iCardsIds.length )
+			// Get a random card ( mainly if iConfig.count < iCardsIds.length )
 			let index = Math.floor( Math.random() * cards.length ); // https://www.w3schools.com/js/js_random.asp
 			index = cards.splice( index, 1 )[0];
 

@@ -18,6 +18,7 @@ class cAssets extends cAssetsA
 		super();
 
 							/*json*/ this.mLevels = null;
+							/*json*/ this.mTweens = null;
 									 
 		         /*createjs.Bitmap*/ this.mGBackground = null;
 		/*createjs.DisplayObject[]*/ this.mGSprites = [];
@@ -47,6 +48,7 @@ class cAssets extends cAssetsA
 		super.Init( iConfig.assets );
 
 		this.mLevels = iConfig.levels;
+		this.mTweens = iConfig.tweens;
 	}
 
 	Load()
@@ -63,7 +65,7 @@ class cAssets extends cAssetsA
 		levels.forEach( level =>
 		{
 			this.mGSprites.push( this.GetAsset( level ).graphic );
-			this.mTSprites.push( this.GetAsset( level ).tweens );
+			this.mTSprites.push( this.mTweens.find( tween => tween.id === level ).tweens );
 		});
 		
 		super._Finish();

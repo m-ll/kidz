@@ -74,7 +74,7 @@ class cApp extends cAppA
 	
 	_Game()
 	{
-		this.mGame.Init( this.mAssets );
+		this.mGame.Init( this.mAssets, this.Config() );
 
 		let ui = new cGameUI( this.mGame, this.Stage(), this.mAssets, this._Win, this );
 		ui.Init();

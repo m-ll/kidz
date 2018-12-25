@@ -56,7 +56,7 @@ class cGame
 	}
 
 // public
-	Init( /*cAssets*/ iAssets )
+	Init( /*cAssets*/ iAssets, /*json*/ iConfig )
 	{
 		this.mGBackground = iAssets.GetGBackground();
 		this.mGSprites = iAssets.GetGSprites();

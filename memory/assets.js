@@ -42,7 +42,7 @@ class cAssets extends cAssetsA
 // public
 	Init( /*json*/ iConfig )
 	{
-		super.Init( iConfig );
+		super.Init( iConfig.assets );
 	}
 
 	Load()
