@@ -8,7 +8,7 @@
 /// 29c355784a3921aa290371da87bce9c1617b8584ca6ac6fb17fb37ba4a07d191
 ///
 
-import { cApp as cAppA } from '../core/app.js';
+import { cApp as cCoreApp } from '../core/app.js';
 import { cAssets } from './assets.js';
 import { cAssetsUI } from '../core/assets-ui.js';
 import { cFaf } from '../core/faf.js';
@@ -19,7 +19,7 @@ import { cWin } from '../core/win.js';
 import { cWinUI } from '../core/win-ui.js';
 
 export 
-class cApp extends cAppA
+class cApp extends cCoreApp
 {
 	constructor()
 	{

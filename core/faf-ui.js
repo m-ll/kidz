@@ -11,7 +11,7 @@
 import { cUI } from '../core/ui.js';
 
 export 
-class cFafUI /* F(irst) A(nd) F(oremost): before assets loaded */ extends cUI
+class cFafUI extends cUI
 {
 	constructor( /*cFaf*/ iFaf, /*createjs.Stage*/ iStage, /*function*/ iNextCB, /*object*/ iNextCBData )
 	{

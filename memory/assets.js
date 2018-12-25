@@ -8,10 +8,10 @@
 /// 29c355784a3921aa290371da87bce9c1617b8584ca6ac6fb17fb37ba4a07d191
 ///
 
-import { cAssets as cAssetsA } from '../core/assets.js';
+import { cAssets as cCoreAssets } from '../core/assets.js';
 
 export 
-class cAssets extends cAssetsA
+class cAssets extends cCoreAssets
 {
 	constructor()
 	{
