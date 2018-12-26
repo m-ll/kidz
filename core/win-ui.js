@@ -107,7 +107,7 @@ class cWinUI extends cUI
 	_Tick( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
 		let that = iData.that;
-
+		
 		that.Stage().update( iEvent );
 	}
 }
