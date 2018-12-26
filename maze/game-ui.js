@@ -25,10 +25,6 @@ class cGameUI extends cUI
 
 		  /*cGame*/ this.mGame = iGame;
 
-		/*createjs.Bitmap*/ this.mBackground = null;
-		/*createjs.Bitmap*/ this.mRunner = null;
-		/*createjs.Bitmap*/ this.mGoal = null;
-
 		 /*number*/ this.mStartWait = 0;
 		 /*object*/ this.mListener = null;
 		/*boolean*/ this.mTopHeld = false;
@@ -50,13 +46,9 @@ class cGameUI extends cUI
 	{
 		super.Build();
 
-		this.mBackground = this.Assets().GetGBackground();
-		this.mRunner = this.Assets().GetGRunner();
-		this.mGoal = this.Assets().GetGGoal();
-		
-		this.Stage().addChild( this.mBackground );
-		this.Stage().addChild( this.mGoal );
-		this.Stage().addChild( this.mRunner );
+		this.Stage().addChild( this.mGame.GetGBackground() );
+		this.Stage().addChild( this.mGame.GetGGoal() );
+		this.Stage().addChild( this.mGame.GetGRunner() );
 
 		this._Refresh();
 	}
@@ -112,10 +104,10 @@ class cGameUI extends cUI
 	
 	_Refresh()
 	{
-		this.mRunner.x = this.mGame.GetRunnerPosition().x;
-		this.mRunner.y = this.mGame.GetRunnerPosition().y;
-		this.mGoal.x = this.mGame.GetGoalPosition().x;
-		this.mGoal.y = this.mGame.GetGoalPosition().y;
+		this.mGame.GetGRunner().x = this.mGame.GetRunnerPosition().x;
+		this.mGame.GetGRunner().y = this.mGame.GetRunnerPosition().y;
+		this.mGame.GetGGoal().x = this.mGame.GetGoalPosition().x;
+		this.mGame.GetGGoal().y = this.mGame.GetGoalPosition().y;
 	}
 	
 	_Tick( /*createjs.Event*/ iEvent, /*object*/ iData )

@@ -108,8 +108,13 @@ class cGame
 {
 	constructor()
 	{
-		       /*cMaze*/ this.mMaze = new cMaze();
-		/*cGame.eState*/ this.mState = cGame.eState.kIdle;
+			      /*cMaze*/ this.mMaze = new cMaze();
+			   
+		/*createjs.Bitmap*/ this.mGBackground = null;
+		/*createjs.Bitmap*/ this.mGRunner = null;
+		/*createjs.Bitmap*/ this.mGGoal = null;
+
+		   /*cGame.eState*/ this.mState = cGame.eState.kIdle;
 	}
 	
 // public
@@ -125,6 +130,22 @@ class cGame
 	}
 
 // public
+	/*createjs.Bitmap*/
+	GetGBackground()
+	{
+		return this.mGBackground;
+	}
+	/*createjs.Bitmap*/
+	GetGRunner()
+	{
+		return this.mGRunner;
+	}
+	/*createjs.Bitmap*/
+	GetGGoal()
+	{
+		return this.mGGoal;
+	}
+
 	/*cGame.eState*/
 	GetState()
 	{
@@ -138,6 +159,10 @@ class cGame
 	Init( /*cAssets*/ iAssets, /*json*/ iConfig )
 	{
 		this.mState = cGame.eState.kIdle;
+		
+		this.mGBackground = iAssets.GetGBackground(); //TODO: maybe clone ?
+		this.mGRunner = iAssets.GetGRunner();
+		this.mGGoal = iAssets.GetGGoal();
 		
 		this.mMaze.Init( iConfig.maze );
 	}
