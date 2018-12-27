@@ -25,7 +25,6 @@ class cGameUI extends cUI
 
 		  /*cGame*/ this.mGame = iGame;
 
-		 /*number*/ this.mStartWait = 0;
 		 /*object*/ this.mListener = null;
 		/*boolean*/ this.mTopHeld = false;
 		/*boolean*/ this.mRightHeld = false;
@@ -120,23 +119,19 @@ class cGameUI extends cUI
 				if( that.mTopHeld || that.mRightHeld || that.mBottomHeld || that.mLeftHeld )
 				{
 					that.mGame.SetState( cGame.eState.kMove );
-					that.mStartWait = 0;
 				}
 				break;
 			case cGame.eState.kMove:
-				let delta = Date.now() - that.mStartWait;
-				if( that.mStartWait && delta < 0.1 * 1000 )
-					break;
-				that.mStartWait = Date.now();
-
+				let step = iEvent.delta / 1000 * 200; // 200px / second
+				
 				if( that.mTopHeld )
-					that.mGame.GotoTop();
-				else if( that.mRightHeld )
-					that.mGame.GotoRight();
-				else if( that.mBottomHeld )
-					that.mGame.GotoBottom();
-				else if( that.mLeftHeld )
-					that.mGame.GotoLeft();
+					that.mGame.GotoTop( step );
+				if( that.mRightHeld )
+					that.mGame.GotoRight( step );
+				if( that.mBottomHeld )
+					that.mGame.GotoBottom( step );
+				if( that.mLeftHeld )
+					that.mGame.GotoLeft( step );
 
 				if( that.mGame.Win() )
 					that.mGame.SetState( cGame.eState.kWin );

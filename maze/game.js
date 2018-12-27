@@ -8,13 +8,35 @@
 /// 29c355784a3921aa290371da87bce9c1617b8584ca6ac6fb17fb37ba4a07d191
 ///
 
+class cBoundingBox
+{
+	constructor( /*number*/ iX, /*number*/ iY, /*number*/ iWidth, /*number*/ iHeight )
+	{
+		/*number*/ this.mX = iX;
+		/*number*/ this.mY = iY;
+		/*number*/ this.mWidth = Math.max( 1, iWidth );
+		/*number*/ this.mHeight = Math.max( 1, iHeight );
+	}
+
+	/*number*/ X() { return this.mX; }
+	/*number*/ Y() { return this.mY; }
+	/*number*/ Width() { return this.mWidth; }
+	/*number*/ Height() { return this.mHeight; }
+
+	/*number*/ X1() { return this.mX; }
+	/*number*/ Y1() { return this.mY; }
+	/*number*/ X2() { return this.mX + this.mWidth - 1; }
+	/*number*/ Y2() { return this.mY + this.mHeight - 1; }
+}
+
 class cMaze
 {
 	constructor()
 	{
+		             /*number*/ this.mTileSize = 1;
 		/*cMaze.eTileType[][]*/ this.mTiles = [];
-		    /*{number,number}*/ this.mRunner = {};
-		    /*{number,number}*/ this.mGoal = {};
+		             /*number*/ this.mRunnerBB = null;
+		             /*number*/ this.mGoalBB = null;
 	}
 	
 // public
@@ -27,79 +49,113 @@ class cMaze
 				};
 	}
 
-	Init( /*json*/ iConfig )
+	Init( /*cAssets*/ iAssets, /*json*/ iConfig )
 	{
 		this.mTiles = [];
+		this.mTileSize = iConfig.tilesize;
 
-		let maze = iConfig;
-		maze.forEach( line => {
+		let maze = iConfig.maze;
+		maze.forEach( ( line, y ) => {
 			let last_line = [];
 
 			let letters = line.split( '' );
-			letters.forEach( letter =>
+			letters.forEach( ( letter, x ) =>
 			{
 				switch( letter )
 				{
 					case '#': last_line.push( cMaze.eTileType.kWall ); break;
 					default:
 					case ' ': last_line.push( cMaze.eTileType.kSpace ); break;
+
+					case 'o': 
+					{
+						let width = iAssets.GetGRunner().getBounds().width;
+						let height = iAssets.GetGRunner().getBounds().height;
+						this.mRunnerBB = new cBoundingBox( this._Index2Pixel( x ) + this.mTileSize / 2 - width / 2, 
+															this._Index2Pixel( y ) + this.mTileSize / 2 - height / 2,
+															width,
+															height );
+
+						last_line.push( cMaze.eTileType.kSpace ); 
+					}
+					break;
+					case 'x': 
+					{
+						let width = iAssets.GetGGoal().getBounds().width;
+						let height = iAssets.GetGGoal().getBounds().height;
+						this.mGoalBB = new cBoundingBox( this._Index2Pixel( x ) + this.mTileSize / 2 - width / 2, 
+															this._Index2Pixel( y ) + this.mTileSize / 2 - height / 2,
+															width,
+															height );
+
+						last_line.push( cMaze.eTileType.kSpace );
+					}
+					break;
 				}
 			});
 
 			this.mTiles.push( last_line );
 		});
+	}
 
-		for( let y = 0; y < maze.length; y++ )
-		{
-			let line = maze[y];
-			for( let x = 0; x < line.length; x++ )
-			{
-				let letter = line[x];
-				if( letter === 'o' )
-					this.mRunner = { 'x': x, 'y': y };
-				if( letter === 'x' )
-					this.mGoal = { 'x': x, 'y': y };
+	/*object*/
+	GetRunnerTiles( /*number*/ iX, /*number*/ iY )
+	{
+		let bb = new cBoundingBox( iX, iY, this.mRunnerBB.Width(), this.mRunnerBB.Height() );
+		let tile_x1 = Math.floor( bb.X1() / this.mTileSize );
+		let tile_y1 = Math.floor( bb.Y1() / this.mTileSize );
+		let tile_x2 = Math.floor( bb.X2() / this.mTileSize );
+		let tile_y2 = Math.floor( bb.Y2() / this.mTileSize );
+		return { 
+			'topleft': { 'type': this.mTiles[tile_y1][tile_x1], 
+			             'x1': this._Index2Pixel( tile_x1 ), 'y1': this._Index2Pixel( tile_y1 ), 'x2': this._Index2Pixel( tile_x1 + 1 ) - 1, 'y2': this._Index2Pixel( tile_y1 + 1 ) - 1 },
+			'topright': { 'type': this.mTiles[tile_y1][tile_x2],
+			              'x1': this._Index2Pixel( tile_x2 ), 'y1': this._Index2Pixel( tile_y1 ), 'x2': this._Index2Pixel( tile_x2 + 1 ) - 1, 'y2': this._Index2Pixel( tile_y1 + 1 ) - 1 },
+			'bottomright': { 'type': this.mTiles[tile_y2][tile_x2],
+			                 'x1': this._Index2Pixel( tile_x2 ), 'y1': this._Index2Pixel( tile_y2 ), 'x2': this._Index2Pixel( tile_x2 + 1 ) - 1, 'y2': this._Index2Pixel( tile_y2 + 1 ) - 1 },
+			'bottomleft': { 'type': this.mTiles[tile_y2][tile_x1],
+			                'x1': this._Index2Pixel( tile_x1 ), 'y1': this._Index2Pixel( tile_y2 ), 'x2': this._Index2Pixel( tile_x1 + 1 ) - 1, 'y2': this._Index2Pixel( tile_y2 + 1 ) - 1 },
 			}
-		}
 	}
 
-	/*cMaze.eTileType*/
-	GetTile( /*number*/ iX, /*number*/ iY )
+	/*cBoundingBox*/
+	GetRunnerBoundingBox()
 	{
-		return this.mTiles[iY][iX];
-	}
-
-	/*{number,number}*/
-	GetRunnerPosition()
-	{
-		return Object.assign( {}, this.mRunner );
+		return this.mRunnerBB;
 	}
 	SetRunnerPosition( /*number*/ iX, /*number*/ iY )
 	{
-		this.mRunner.x = this._ClampX( iX );
-		this.mRunner.y = this._ClampY( iY );
+		this.mRunnerBB.mX = this._ClampX( iX );
+		this.mRunnerBB.mY = this._ClampY( iY );
 	}
-	/*{number,number}*/
-	GetGoalPosition()
+
+	/*cBoundingBox*/
+	GetGoalBoundingBox()
 	{
-		return Object.assign( {}, this.mGoal );
+		return this.mGoalBB;
 	}
 	SetGoalPosition( /*number*/ iX, /*number*/ iY )
 	{
-		this.mGoal.x = this._ClampX( iX );
-		this.mGoal.y = this._ClampY( iY );
+		this.mGoalBB.mX = this._ClampX( iX );
+		this.mGoalBB.mY = this._ClampY( iY );
 	}
 
 // private
 	/*number*/
 	_ClampX( /*number*/ iX )
 	{
-		return Math.min( Math.max( iX, 0 ), this.mTiles[0].length - 1 );
+		return Math.min( Math.max( iX, 0 ), this._Index2Pixel( this.mTiles[0].length ) - 1 );
 	}
 	/*number*/
 	_ClampY( /*number*/ iY )
 	{
-		return Math.min( Math.max( iY, 0 ), this.mTiles.length - 1 );
+		return Math.min( Math.max( iY, 0 ), this._Index2Pixel( this.mTiles.length ) - 1 );
+	}
+
+	/*number*/
+	_Index2Pixel( /*number*/ iIndex )
+	{
+		return iIndex * this.mTileSize;
 	}
 }
 
@@ -164,69 +220,87 @@ class cGame
 		this.mGRunner = iAssets.GetGRunner();
 		this.mGGoal = iAssets.GetGGoal();
 		
-		this.mMaze.Init( iConfig.maze );
+		this.mMaze.Init( iAssets, iConfig );
 	}
 
 	/*{number,number}*/
 	GetRunnerPosition()
 	{
-		return { 'x': this.mMaze.GetRunnerPosition().x * 50, 'y': this.mMaze.GetRunnerPosition().y * 50 };
+		return { 'x': this.mMaze.GetRunnerBoundingBox().X(), 'y': this.mMaze.GetRunnerBoundingBox().Y() };
 	}
 	/*{number,number}*/
 	GetGoalPosition()
 	{
-		return { 'x': this.mMaze.GetGoalPosition().x * 50, 'y': this.mMaze.GetGoalPosition().y * 50 };
+		return { 'x': this.mMaze.GetGoalBoundingBox().X(), 'y': this.mMaze.GetGoalBoundingBox().Y() };
 	}
 
-	GotoTop()
+	GotoTop( /*number*/ iStep )
 	{
-		let new_x = this.mMaze.GetRunnerPosition().x;
-		let new_y = this.mMaze.GetRunnerPosition().y - 1;
+		let new_x = this.mMaze.GetRunnerBoundingBox().X();
+		let new_y = this.mMaze.GetRunnerBoundingBox().Y() - iStep;
 
-		this._MoveTo( new_x, new_y );
+		let tiles = this.mMaze.GetRunnerTiles( new_x, new_y );
+		if( tiles.topleft.type !== cMaze.eTileType.kSpace || tiles.topright.type !== cMaze.eTileType.kSpace )
+			new_y = tiles.topleft.y2 + 1;
+		
+		this.mMaze.SetRunnerPosition( new_x, new_y );
 	}
-	GotoRight()
+	GotoRight( /*number*/ iStep )
 	{
-		let new_x = this.mMaze.GetRunnerPosition().x + 1;
-		let new_y = this.mMaze.GetRunnerPosition().y;
+		let new_x = this.mMaze.GetRunnerBoundingBox().X() + iStep;
+		let new_y = this.mMaze.GetRunnerBoundingBox().Y();
 
-		this._MoveTo( new_x, new_y );
+		let tiles = this.mMaze.GetRunnerTiles( new_x, new_y );
+		if( tiles.topright.type !== cMaze.eTileType.kSpace || tiles.bottomright.type !== cMaze.eTileType.kSpace )
+			new_x = tiles.topright.x1 - this.mMaze.GetRunnerBoundingBox().Width();
+		
+		this.mMaze.SetRunnerPosition( new_x, new_y );
 	}
-	GotoBottom()
+	GotoBottom( /*number*/ iStep )
 	{
-		let new_x = this.mMaze.GetRunnerPosition().x;
-		let new_y = this.mMaze.GetRunnerPosition().y + 1;
+		let new_x = this.mMaze.GetRunnerBoundingBox().X();
+		let new_y = this.mMaze.GetRunnerBoundingBox().Y() + iStep;
 
-		this._MoveTo( new_x, new_y );
+		let tiles = this.mMaze.GetRunnerTiles( new_x, new_y );
+		if( tiles.bottomleft.type !== cMaze.eTileType.kSpace || tiles.bottomright.type !== cMaze.eTileType.kSpace )
+			new_y = tiles.bottomleft.y1 - this.mMaze.GetRunnerBoundingBox().Height();
+		
+		this.mMaze.SetRunnerPosition( new_x, new_y );
 	}
-	GotoLeft()
+	GotoLeft( /*number*/ iStep )
 	{
-		let new_x = this.mMaze.GetRunnerPosition().x - 1;
-		let new_y = this.mMaze.GetRunnerPosition().y;
+		let new_x = this.mMaze.GetRunnerBoundingBox().X() - iStep;
+		let new_y = this.mMaze.GetRunnerBoundingBox().Y();
 
-		this._MoveTo( new_x, new_y );
+		let tiles = this.mMaze.GetRunnerTiles( new_x, new_y );
+		if( tiles.topleft.type !== cMaze.eTileType.kSpace || tiles.bottomleft.type !== cMaze.eTileType.kSpace )
+			new_x = tiles.topleft.x2 + 1;
+		
+		this.mMaze.SetRunnerPosition( new_x, new_y );
 	}
 
 	/*boolean*/
 	Win()
 	{
-		return this.mMaze.GetRunnerPosition().x === this.mMaze.GetGoalPosition().x &&
-			   this.mMaze.GetRunnerPosition().y === this.mMaze.GetGoalPosition().y;
+		let center_x = this.mMaze.GetRunnerBoundingBox().X() + this.mMaze.GetRunnerBoundingBox().Width() / 2;
+		let center_y = this.mMaze.GetRunnerBoundingBox().Y() + this.mMaze.GetRunnerBoundingBox().Height() / 2;
+
+		if( center_x < this.mMaze.GetGoalBoundingBox().X() )
+			return false;
+		if( center_x > this.mMaze.GetGoalBoundingBox().X() + this.mMaze.GetGoalBoundingBox().Width() - 1 )
+			return false;
+		if( center_y < this.mMaze.GetGoalBoundingBox().Y() )
+			return false;
+		if( center_y > this.mMaze.GetGoalBoundingBox().Y() + this.mMaze.GetGoalBoundingBox().Height() - 1 )
+			return false;
+
+		return true;
 	}
 
 	/*boolean*/
 	Lose()
 	{
-		// return this.mMaze.GetRunnerPosition() === this.mMaze.GetTrapPosition();
+		// return this.mMaze.GetRunnerX() === this.mMaze.GetTrapX();
 		return false;
-	}
-
-// private
-	_MoveTo( /*number*/ iX, /*number*/ iY )
-	{
-		if( this.mMaze.GetTile( iX, iY ) === cMaze.eTileType.kWall )
-			return;
-		
-		this.mMaze.SetRunnerPosition( iX, iY );
 	}
 }
