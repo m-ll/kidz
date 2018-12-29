@@ -2,7 +2,7 @@
 	"maze":
 	[
 		"####################",
-		"#o    #####       x#",
+		"#>    #####       x#",
 		"##### ##### ## #####",
 		"##### #   # ## #####",
 		"##### ### # ## #####",
@@ -18,8 +18,76 @@
 	[
 		{ "id": "background", "name": "background.png" },
 
-		{ "id": "runner", "name": "runner.png" },
-		{ "id": "goal", "name": "goal.png" },
-		{ "id": "trap", "name": "trap.png" }
+		{ 
+			"id": "runner-to-right", 
+			"name": "mouse-to-right.png", 
+			
+			"spritesheet":
+			{
+				"ids": ["runner-to-right"],
+				"frames": { "regX": 0, "regY": 0, "width": 40, "height": 28, "count": 4 },
+				"animations": 
+				{ 
+					"idle": 0,
+					"move": [ 0, 3, "move" ]
+				},
+				"framerate": 12
+			},
+			"start": "idle"
+		},
+		{ 
+			"id": "runner-to-left", 
+			"name": "mouse-to-left.png", 
+			
+			"spritesheet":
+			{
+				"ids": ["runner-to-left"],
+				"frames": { "regX": 0, "regY": 0, "width": 40, "height": 28, "count": 4 },
+				"animations": 
+				{ 
+					"idle": 0,
+					"move": [ 0, 3, "move" ]
+				},
+				"framerate": 12
+			},
+			"start": "idle"
+		},
+		{ 
+			"id": "runner-to-top", 
+			"name": "mouse-to-top.png", 
+			
+			"spritesheet":
+			{
+				"ids": ["runner-to-top"],
+				"frames": { "regX": 0, "regY": 0, "width": 28, "height": 40, "count": 4 },
+				"animations": 
+				{ 
+					"idle": 0,
+					"move": [ 0, 3, "move" ]
+				},
+				"framerate": 12
+			},
+			"start": "idle"
+		},
+		{ 
+			"id": "runner-to-bottom", 
+			"name": "mouse-to-bottom.png", 
+			
+			"spritesheet":
+			{
+				"ids": ["runner-to-bottom"],
+				"frames": { "regX": 0, "regY": 0, "width": 28, "height": 40, "count": 4 },
+				"animations": 
+				{ 
+					"idle": 0,
+					"move": [ 0, 3, "move" ]
+				},
+				"framerate": 12
+			},
+			"start": "idle"
+		},
+
+		{ "id": "goal", "name": "cheese.png" },
+		{ "id": "trap", "name": "mouse-trap.png" }
 	]
 }

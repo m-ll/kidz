@@ -48,8 +48,6 @@ class cGameUI extends cUI
 		this.Stage().addChild( this.mGame.GetGBackground() );
 		this.Stage().addChild( this.mGame.GetGGoal() );
 		this.Stage().addChild( this.mGame.GetGRunner() );
-
-		this._Refresh();
 	}
 	
 	Start()
@@ -101,26 +99,49 @@ class cGameUI extends cUI
 		}
 	}
 	
-	_Refresh()
-	{
-		this.mGame.GetGRunner().x = this.mGame.GetRunnerPosition().x;
-		this.mGame.GetGRunner().y = this.mGame.GetRunnerPosition().y;
-		this.mGame.GetGGoal().x = this.mGame.GetGoalPosition().x;
-		this.mGame.GetGGoal().y = this.mGame.GetGoalPosition().y;
-	}
-	
 	_Tick( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
 		let that = iData.that;
 
+		if( that.mGame.Win() )
+			that.mGame.SetState( cGame.eState.kWin );
+		if( that.mGame.Lose() )
+			that.mGame.SetState( cGame.eState.kLose );
+
 		switch( that.mGame.GetState() )
 		{
+			case cGame.eState.kStartIdle:
+				that.mGame.GetGRunner().gotoAndPlay( 'idle' );
+				that.mGame.SetState( cGame.eState.kIdle );
+				break;
 			case cGame.eState.kIdle:
 				if( that.mTopHeld || that.mRightHeld || that.mBottomHeld || that.mLeftHeld )
 				{
-					that.mGame.SetState( cGame.eState.kMove );
+					that.mGame.SetState( cGame.eState.kStopIdle );
 				}
 				break;
+			case cGame.eState.kStopIdle:
+				that.mGame.GetGRunner().stop();
+				that.mGame.SetState( cGame.eState.kStartMove );
+				break;
+			case cGame.eState.kStartMove:
+				that.Stage().removeChild( that.mGame.GetGRunner() );
+
+				if( that.mTopHeld )
+					that.mGame.StartMoveTop();
+				if( that.mRightHeld )
+					that.mGame.StartMoveRight();
+				if( that.mBottomHeld )
+					that.mGame.StartMoveBottom();
+				if( that.mLeftHeld )
+					that.mGame.StartMoveLeft();
+					
+				that.Stage().addChild( that.mGame.GetGRunner() );
+				
+				that.mGame.GetGRunner().gotoAndPlay( 'move' );
+				that.mGame.SetState( cGame.eState.kMove );
+				break;
+				//TODO: try to find a way to change the sprite because: down right (mouse-to-right) > down bottom (mouse-to-right) > up right (still mouse-to-right)
 			case cGame.eState.kMove:
 				let step = iEvent.delta / 1000 * 200; // 200px / second
 				
@@ -132,25 +153,27 @@ class cGameUI extends cUI
 					that.mGame.GotoBottom( step );
 				if( that.mLeftHeld )
 					that.mGame.GotoLeft( step );
-
-				if( that.mGame.Win() )
-					that.mGame.SetState( cGame.eState.kWin );
-				if( that.mGame.Lose() )
-					that.mGame.SetState( cGame.eState.kLose );
-
+				
 				if( !that.mTopHeld && !that.mRightHeld && !that.mBottomHeld && !that.mLeftHeld )
-					that.mGame.SetState( cGame.eState.kIdle );
+				{
+					that.mGame.SetState( cGame.eState.kStopMove );
+				}
 				break;
+			case cGame.eState.kStopMove:
+				that.mGame.GetGRunner().stop();
+				that.mGame.SetState( cGame.eState.kStartIdle );
+				break;
+
 			case cGame.eState.kWin:
+				that.mGame.GetGRunner().stop();
 				that._Stop();
 				break;
 			case cGame.eState.kLose:
+				that.mGame.GetGRunner().stop();
 				that._Stop();
 				break;
 		}
 
-		that._Refresh();
-		
 		that.Stage().update( iEvent );
 	}
 }

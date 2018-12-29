@@ -18,7 +18,7 @@ class cAssets extends cCoreAssets
 		super();
 
 		/*createjs.Bitmap*/ this.mGBackground = null;
-		/*createjs.Bitmap*/ this.mGRunner = null;
+		/*createjs.Bitmap[]*/ this.mGRunners = { 'top': null, 'right': null, 'bottom': null, 'left': null };
 		/*createjs.Bitmap*/ this.mGGoal = null;
 		/*createjs.Bitmap*/ this.mGTrap = null;
 	}
@@ -30,9 +30,9 @@ class cAssets extends cCoreAssets
 		return this.mGBackground;
 	}
 	/*createjs.Bitmap*/
-	GetGRunner()
+	GetGRunners()
 	{
-		return this.mGRunner;
+		return this.mGRunners;
 	}
 	/*createjs.Bitmap*/
 	GetGGoal()
@@ -60,7 +60,11 @@ class cAssets extends cCoreAssets
 	_Finish()
 	{
 		this.mGBackground = this.GetAsset( 'background' ).graphic;
-		this.mGRunner = this.GetAsset( 'runner' ).graphic;
+		// Must be the same order as eDirection
+		this.mGRunners.top = this.GetAsset( 'runner-to-top' ).graphic;
+		this.mGRunners.right = this.GetAsset( 'runner-to-right' ).graphic;
+		this.mGRunners.bottom = this.GetAsset( 'runner-to-bottom' ).graphic;
+		this.mGRunners.left = this.GetAsset( 'runner-to-left' ).graphic;
 		this.mGGoal = this.GetAsset( 'goal' ).graphic;
 		this.mGTrap = this.GetAsset( 'trap' ).graphic;
 
