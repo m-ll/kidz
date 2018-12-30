@@ -90,22 +90,21 @@ class cAssets
 
 		let loader = new createjs.LoadQueue( false );
 		loader.installPlugin( createjs.Sound );
-		loader.on( 'complete', this._BuildGraphics, null, false, { that: this } );
-		loader.on( 'fileload', this._BuildGraphic, null, false, { that: this } );
-		loader.on( 'progress', this._ProgressGraphics, null, false, { that: this } );
+		loader.on( 'complete', this._BuildGraphics, this );
+		loader.on( 'fileload', this._BuildGraphic, this );
+		loader.on( 'progress', this._ProgressGraphics, this );
 		loader.loadManifest( manifest, true, 'assets/' );
 	}
 	_BuildGraphic( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
 		let loader = iEvent.target;
-		let that = iData.that;
 		let item = iEvent.item;
 		
-		let asset = that.Config().find( asset => asset.id === item.id );
+		let asset = this.Config().find( asset => asset.id === item.id );
 
 		if( asset.name.includes( '.wav' ) || asset.name.includes( 'mp3' ) )
 		{
-			that.mSounds.push( { 'id': asset.id, 'sound': asset.id } ); //loader.getResult( that.Config().flip.id );
+			this.mSounds.push( { 'id': asset.id, 'sound': asset.id } ); //loader.getResult( this.Config().flip.id );
 		}
 		else if( asset.spritesheet )
 		{
@@ -118,7 +117,7 @@ class cAssets
 			let bounds = gsprite.getBounds();
 			gsprite.setBounds( bounds.x, bounds.y, bounds.width, bounds.height );
 
-			that.mGraphics.push( { 'id': asset.id, 'graphic': gsprite } );
+			this.mGraphics.push( { 'id': asset.id, 'graphic': gsprite } );
 		}
 		else
 		{
@@ -126,19 +125,15 @@ class cAssets
 			let bounds = gsprite.getBounds();
 			gsprite.setBounds( bounds.x, bounds.y, bounds.width, bounds.height );
 			
-			that.mGraphics.push( { 'id': asset.id, 'graphic': gsprite } );
+			this.mGraphics.push( { 'id': asset.id, 'graphic': gsprite } );
 		}
 	}
 	_ProgressGraphics( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
-		let that = iData.that;
-		
-		that._SetProgress( iEvent.loaded ); //TODO: check divide by iEvent.total (?)
+		this._SetProgress( iEvent.loaded ); //TODO: check divide by iEvent.total (?)
 	}
 	_BuildGraphics( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
-		let that = iData.that;
-		
-		that._Finish();
+		this._Finish();
 	}
 }

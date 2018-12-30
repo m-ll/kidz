@@ -36,7 +36,7 @@ class cGameUI extends cUI
 
 		this.mGame.GetCards().forEach( iCard => 
 		{
-			iCard.GetImage().on( 'click', this._CardClicked, null, false, { that: this, card: iCard } );
+			iCard.GetImage().on( 'click', this._CardClicked, this, false, { card: iCard } );
 		});
 
 		this._Refresh();
@@ -47,7 +47,7 @@ class cGameUI extends cUI
 		super.Start();
 
 		createjs.Ticker.timingMode = createjs.Ticker.RAF;
-		this.mListener = createjs.Ticker.on( 'tick', this._Tick, null, false, { that: this } );
+		this.mListener = createjs.Ticker.on( 'tick', this._Tick, this );
 	}
 	
 // private
@@ -103,36 +103,35 @@ class cGameUI extends cUI
 	
 	_CardClicked( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
-		let that = iData.that;
 		let card = iData.card;
 
-		switch( that.mGame.GetState() )
+		switch( this.mGame.GetState() )
 		{
 			case cGame.eState.kIdle:
 				if( card.GetState() !== cCard.eState.kHidden )
 					break;
 
 				card.SetState( cCard.eState.kTry );
-				that.mGame.SetState( cGame.eState.kTry );
-				that._Refresh();
+				this.mGame.SetState( cGame.eState.kTry );
+				this._Refresh();
 				break;
 			case cGame.eState.kTry:
 				if( card.GetState() !== cCard.eState.kHidden )
 					break;
 					
-				that.mStartWait = Date.now();
+				this.mStartWait = Date.now();
 
 				card.SetState( cCard.eState.kTry );
-				that.mGame.SetState( cGame.eState.kTest );
-				that._Refresh();
+				this.mGame.SetState( cGame.eState.kTest );
+				this._Refresh();
 				break;
 			// case cGame.eState.kTest:
 			// 	break;
 			// To not wait between begin/end wait
 			// case cGame.eState.kBeginWait:
-				// that.mGame.Process();
-				// that.mGame.SetState( cGame.eState.kIdle );
-				// that._CardClicked( iEvent, iData );
+				// this.mGame.Process();
+				// this.mGame.SetState( cGame.eState.kIdle );
+				// this._CardClicked( iEvent, iData );
 				// break;
 			// case cGame.eState.kEndWait:
 			// 	break;
@@ -141,44 +140,42 @@ class cGameUI extends cUI
 	
 	_Tick( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
-		let that = iData.that;
-
-		switch( that.mGame.GetState() )
+		switch( this.mGame.GetState() )
 		{
 			case cGame.eState.kIdle:
-				if( that.mGame.Win() )
+				if( this.mGame.Win() )
 				{
 					iEvent.remove();
-					that._Stop();
+					this._Stop();
 				}
 				break;
 			case cGame.eState.kTest:
-				if( that.mGame.Check() )
+				if( this.mGame.Check() )
 				{
-					that.mGame.Process();
-					that.mGame.SetState( cGame.eState.kIdle );
-					that._Refresh();
+					this.mGame.Process();
+					this.mGame.SetState( cGame.eState.kIdle );
+					this._Refresh();
 				}
 				else
 				{
-					that.mGame.SetState( cGame.eState.kBeginWait );
+					this.mGame.SetState( cGame.eState.kBeginWait );
 				}
 				break;
 			case cGame.eState.kBeginWait:
-				let delta = Date.now() - that.mStartWait;
+				let delta = Date.now() - this.mStartWait;
 				if( delta < 1 * 1000 )
 					break;
 
-				that.mGame.SetState( cGame.eState.kEndWait );
-				that._Refresh();
+				this.mGame.SetState( cGame.eState.kEndWait );
+				this._Refresh();
 				break;
 			case cGame.eState.kEndWait:
-				that.mGame.Process();
-				that.mGame.SetState( cGame.eState.kIdle );
-				that._Refresh();
+				this.mGame.Process();
+				this.mGame.SetState( cGame.eState.kIdle );
+				this._Refresh();
 				break;
 		}
 		
-		that.Stage().update( iEvent );
+		this.Stage().update( iEvent );
 	}
 }

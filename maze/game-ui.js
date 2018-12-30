@@ -11,11 +11,6 @@
 import { cGame } from './game.js';
 import { cUI } from '../core/ui.js';
 
-const KEYCODE_UP = 38;
-const KEYCODE_RIGHT = 39;
-const KEYCODE_DOWN = 40;
-const KEYCODE_LEFT = 37;
-
 export 
 class cGameUI extends cUI
 {
@@ -30,6 +25,7 @@ class cGameUI extends cUI
 		/*boolean*/ this.mRightHeld = false;
 		/*boolean*/ this.mBottomHeld = false;
 		/*boolean*/ this.mLeftHeld = false;
+		/*number[]*/ this.mHelds = [];
 	}
 	
 // public
@@ -53,14 +49,19 @@ class cGameUI extends cUI
 	Start()
 	{
 		super.Start();
+		
+		this.mGame.GetGGoal().gotoAndPlay( 'idle' );
 
 		createjs.Ticker.timingMode = createjs.Ticker.RAF;
-		this.mListener = createjs.Ticker.on( 'tick', this._Tick, null, false, { that: this } );
+		this.mListener = createjs.Ticker.on( 'tick', this._Tick, this );
 	}
 	
 // private
 	_Stop()
 	{
+		this.mGame.GetGRunner().stop();
+		this.mGame.GetGGoal().stop();
+
 		// It's commented to keep all stuff displayed during the win screen
 		// this.Stage().removeAllChildren();
 
@@ -69,111 +70,156 @@ class cGameUI extends cUI
 		super._Stop();
 	}
 	
+	// https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key
 	_KeyDown( /*object*/ iEvent )
 	{
-		let event = iEvent;
-		if( !event )
-			event = window.event;
+		if( !iEvent )
+			console.log( '!iEvent ...');
+			
+		if( iEvent.defaultPrevented )
+			return; // Do nothing if the event was already processed
+		
+		if( iEvent.repeat )
+			return;
 
-		switch( event.keyCode )
+		//---
+
+		let event_key = iEvent.key;
+
+ 		// IE/Edge specific value
+		switch( event_key )
 		{
-			case KEYCODE_UP: this.mTopHeld = true; break;
-			case KEYCODE_RIGHT: this.mRightHeld = true; break;
-			case KEYCODE_DOWN: this.mBottomHeld = true; break;
-			case KEYCODE_LEFT: this.mLeftHeld = true; break;
+			case 'Up': event_key = 'ArrowUp'; break;
+			case 'Right': event_key = 'ArrowRight'; break;
+			case 'Down': event_key = 'ArrowDown'; break;
+			case 'Left':  event_key = 'ArrowLeft'; break;
 		}
+
+		switch( event_key )
+		{
+			case 'ArrowUp':
+			case 'ArrowRight':
+			case 'ArrowDown':
+			case 'ArrowLeft': 
+				this.mHelds = this.mHelds.filter( key => key != event_key ); 
+				this.mHelds.push( event_key );
+
+				if( this.mGame.GetState() === cGame.eState.kIdle )
+					this.mGame.SetState( cGame.eState.kStopIdle );
+				break;
+		}
+		
+		// Cancel the default action to avoid it being handled twice
+		// iEvent.preventDefault(); // Commented to be able to use F5
 	}
 	
 	_KeyUp( /*object*/ iEvent )
 	{
-		let event = iEvent;
-		if( !event )
-			event = window.event;
+		if( !iEvent )
+			console.log( '!iEvent ...');
 			
-		switch( event.keyCode )
+		if( iEvent.defaultPrevented )
+			return; // Do nothing if the event was already processed
+		
+		//---
+
+		let event_key = iEvent.key;
+
+ 		// IE/Edge specific value
+		switch( event_key )
 		{
-			case KEYCODE_UP: this.mTopHeld = false; break;
-			case KEYCODE_RIGHT: this.mRightHeld = false; break;
-			case KEYCODE_DOWN: this.mBottomHeld = false; break;
-			case KEYCODE_LEFT: this.mLeftHeld = false; break;
+			case 'Up': event_key = 'ArrowUp'; break;
+			case 'Right': event_key = 'ArrowRight'; break;
+			case 'Down': event_key = 'ArrowDown'; break;
+			case 'Left':  event_key = 'ArrowLeft'; break;
 		}
+
+		switch( event_key )
+		{
+			case 'ArrowUp':
+			case 'ArrowRight':
+			case 'ArrowDown':
+			case 'ArrowLeft': 
+				this.mHelds = this.mHelds.filter( key => key != event_key );
+
+				if( !this.mHelds.length )
+					this.mGame.SetState( cGame.eState.kStopMove );
+				else if( this.mHelds.length === 1 )
+					this.mGame.SetState( cGame.eState.kStartMove );
+				break;
+		}
+		
+		// Cancel the default action to avoid it being handled twice
+		// iEvent.preventDefault(); // Commented to be able to use F5
 	}
 	
 	_Tick( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
-		let that = iData.that;
+		if( this.mGame.Win() )
+			this.mGame.SetState( cGame.eState.kWin );
+		if( this.mGame.Lose() )
+			this.mGame.SetState( cGame.eState.kLose );
 
-		if( that.mGame.Win() )
-			that.mGame.SetState( cGame.eState.kWin );
-		if( that.mGame.Lose() )
-			that.mGame.SetState( cGame.eState.kLose );
-
-		switch( that.mGame.GetState() )
+		switch( this.mGame.GetState() )
 		{
 			case cGame.eState.kStartIdle:
-				that.mGame.GetGRunner().gotoAndPlay( 'idle' );
-				that.mGame.SetState( cGame.eState.kIdle );
+				this.mGame.GetGRunner().gotoAndPlay( 'idle' );
+				this.mGame.SetState( cGame.eState.kIdle );
 				break;
 			case cGame.eState.kIdle:
-				if( that.mTopHeld || that.mRightHeld || that.mBottomHeld || that.mLeftHeld )
-				{
-					that.mGame.SetState( cGame.eState.kStopIdle );
-				}
 				break;
 			case cGame.eState.kStopIdle:
-				that.mGame.GetGRunner().stop();
-				that.mGame.SetState( cGame.eState.kStartMove );
+				this.mGame.GetGRunner().stop();
+				this.mGame.SetState( cGame.eState.kStartMove );
 				break;
 			case cGame.eState.kStartMove:
-				that.Stage().removeChild( that.mGame.GetGRunner() );
+				this.Stage().removeChild( this.mGame.GetGRunner() );
 
-				if( that.mTopHeld )
-					that.mGame.StartMoveTop();
-				if( that.mRightHeld )
-					that.mGame.StartMoveRight();
-				if( that.mBottomHeld )
-					that.mGame.StartMoveBottom();
-				if( that.mLeftHeld )
-					that.mGame.StartMoveLeft();
-					
-				that.Stage().addChild( that.mGame.GetGRunner() );
+				{
+					let last_key = this.mHelds.slice(-1)[0];
+					if( last_key === 'ArrowUp' )
+						this.mGame.StartMoveTop();
+					if( last_key === 'ArrowRight' )
+						this.mGame.StartMoveRight();
+					if( last_key === 'ArrowDown' )
+						this.mGame.StartMoveBottom();
+					if( last_key === 'ArrowLeft' )
+						this.mGame.StartMoveLeft();
+				}
 				
-				that.mGame.GetGRunner().gotoAndPlay( 'move' );
-				that.mGame.SetState( cGame.eState.kMove );
+				this.Stage().addChild( this.mGame.GetGRunner() );
+				
+				this.mGame.GetGRunner().gotoAndPlay( 'move' );
+				this.mGame.SetState( cGame.eState.kMove );
 				break;
-				//TODO: try to find a way to change the sprite because: down right (mouse-to-right) > down bottom (mouse-to-right) > up right (still mouse-to-right)
 			case cGame.eState.kMove:
 				let step = iEvent.delta / 1000 * 200; // 200px / second
 				
-				if( that.mTopHeld )
-					that.mGame.GotoTop( step );
-				if( that.mRightHeld )
-					that.mGame.GotoRight( step );
-				if( that.mBottomHeld )
-					that.mGame.GotoBottom( step );
-				if( that.mLeftHeld )
-					that.mGame.GotoLeft( step );
-				
-				if( !that.mTopHeld && !that.mRightHeld && !that.mBottomHeld && !that.mLeftHeld )
+				this.mHelds.forEach( key =>
 				{
-					that.mGame.SetState( cGame.eState.kStopMove );
-				}
+					if( key === 'ArrowUp' )
+						this.mGame.GotoTop( step );
+					if( key === 'ArrowRight' )
+						this.mGame.GotoRight( step );
+					if( key === 'ArrowDown' )
+						this.mGame.GotoBottom( step );
+					if( key === 'ArrowLeft' )
+						this.mGame.GotoLeft( step );
+				});
 				break;
 			case cGame.eState.kStopMove:
-				that.mGame.GetGRunner().stop();
-				that.mGame.SetState( cGame.eState.kStartIdle );
+				this.mGame.GetGRunner().stop();
+				this.mGame.SetState( cGame.eState.kStartIdle );
 				break;
 
 			case cGame.eState.kWin:
-				that.mGame.GetGRunner().stop();
-				that._Stop();
+				this._Stop();
 				break;
 			case cGame.eState.kLose:
-				that.mGame.GetGRunner().stop();
-				that._Stop();
+				this._Stop();
 				break;
 		}
 
-		that.Stage().update( iEvent );
+		this.Stage().update( iEvent );
 	}
 }

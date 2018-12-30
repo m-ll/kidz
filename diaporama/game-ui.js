@@ -52,7 +52,7 @@ class cGameUI extends cUI
 		super.Start();
 
 		createjs.Ticker.timingMode = createjs.Ticker.RAF;
-		this.mListener = createjs.Ticker.on( 'tick', this._Tick, null, false, { that: this } );
+		this.mListener = createjs.Ticker.on( 'tick', this._Tick, this );
 	}
 	
 // private
@@ -104,24 +104,22 @@ class cGameUI extends cUI
 
 	_Tick( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
-		let that = iData.that;
-
-		switch( that.mGame.GetState() )
+		switch( this.mGame.GetState() )
 		{
 			case cGame.eState.kIdle:
 				break;
 			case cGame.eState.kStartAnimation:
-				that._StartAnimation();
-				that.mGame.SetState( cGame.eState.kAnimation );
+				this._StartAnimation();
+				this.mGame.SetState( cGame.eState.kAnimation );
 				break;
 			case cGame.eState.kAnimation:
 				break;
 			case cGame.eState.kStopAnimation:
-				that._StopAnimation();
-				that.mGame.SetState( cGame.eState.kIdle );
+				this._StopAnimation();
+				this.mGame.SetState( cGame.eState.kIdle );
 				break;
 		}
 		
-		that.Stage().update( iEvent );
+		this.Stage().update( iEvent );
 	}
 }

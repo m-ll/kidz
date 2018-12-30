@@ -87,7 +87,20 @@
 			"start": "idle"
 		},
 
-		{ "id": "goal", "name": "cheese.png" },
+		{
+			"id": "goal", 
+			"name": "cheese.png", 
+			
+			"spritesheet":
+			{
+				"ids": ["goal"],
+				"frames": { "regX": 0, "regY": 0, "width": 50, "height": 50, "count": 52 },
+				"animations": { "idle": [0, 51, "idle"] },
+				"framerate": 12
+			},
+			"start": "idle"
+		},
+
 		{ "id": "trap", "name": "mouse-trap.png" }
 	]
 }

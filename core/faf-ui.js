@@ -46,7 +46,7 @@ class cFafUI extends cUI
 		super.Start();
 
 		createjs.Ticker.timingMode = createjs.Ticker.RAF;
-		this.mListener = createjs.Ticker.on( 'tick', this._Tick, null, false, { that: this } );
+		this.mListener = createjs.Ticker.on( 'tick', this._Tick, this );
 	}
 	
 // private
@@ -59,18 +59,16 @@ class cFafUI extends cUI
 	
 	_Tick( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
-		let that = iData.that;
-		
-		that.mGWelcome.y += 10;
+		this.mGWelcome.y += 10;
 
-		if( that.mGWelcome.y > that.Stage().canvas.height / 2 )
+		if( this.mGWelcome.y > this.Stage().canvas.height / 2 )
 		{
-			that.Stage().removeChild( that.mGWelcome );
+			this.Stage().removeChild( this.mGWelcome );
 
 			iEvent.remove();
-			that._Stop();
+			this._Stop();
 		}
 
-		that.Stage().update( iEvent );
+		this.Stage().update( iEvent );
 	}
 }

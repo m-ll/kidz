@@ -39,7 +39,7 @@ class cAssetsUI extends cUI
 		super.Start();
 
 		createjs.Ticker.timingMode = createjs.Ticker.RAF;
-		this.mListener = createjs.Ticker.on( 'tick', this._Tick, null, false, { that: this } );
+		this.mListener = createjs.Ticker.on( 'tick', this._Tick, this );
 	}
 	
 // private
@@ -67,18 +67,16 @@ class cAssetsUI extends cUI
 
 	_Tick( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
-		let that = iData.that;
-
-		if( that.Assets().IsCompleted() )
+		if( this.Assets().IsCompleted() )
 		{
 			iEvent.remove();
-			that._Stop();
+			this._Stop();
 		}
 		else
 		{
-			that.mGProgress.getChildAt( 0 ).scaleX = that.Assets()._GetProgress() * 600;
+			this.mGProgress.getChildAt( 0 ).scaleX = this.Assets()._GetProgress() * 600;
 		}
 
-		that.Stage().update( iEvent );
+		this.Stage().update( iEvent );
 	}
 }

@@ -42,7 +42,7 @@ class cWinUI extends cUI
 		super.Start();
 
 		createjs.Ticker.timingMode = createjs.Ticker.RAF;
-		this.mListener = createjs.Ticker.on( 'tick', this._Tick, null, false, { that: this } );
+		this.mListener = createjs.Ticker.on( 'tick', this._Tick, this );
 	}
 	
 // private
@@ -80,7 +80,7 @@ class cWinUI extends cUI
 		this.mGPlayAgain.x = this.Stage().canvas.width / 2 - 250 / 2;
 		this.mGPlayAgain.y = this.Stage().canvas.height / 2 - 40 / 2 + 20;
 		this.mGPlayAgain.addChild( bg, gtext );
-		this.mGPlayAgain.on( 'click', this._PlayAgain, null, false, { that: this } );
+		this.mGPlayAgain.on( 'click', this._PlayAgain, this );
 		this.mGPlayAgain.cursor = 'pointer';
 
 		this.Stage().addChild( this.mGPlayAgain );
@@ -98,16 +98,12 @@ class cWinUI extends cUI
 	
 	_PlayAgain( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
-		let that = iData.that;
-		
 		iEvent.remove();
-		that._Stop();
+		this._Stop();
 	}
 	
 	_Tick( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
-		let that = iData.that;
-		
-		that.Stage().update( iEvent );
+		this.Stage().update( iEvent );
 	}
 }

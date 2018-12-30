@@ -210,31 +210,86 @@ class cGame
 	StartMoveTop()
 	{
 		let new_runner = this.mGRunners.top;
-		//TODO: try to compute the origin x,y in a better way when changing from panoramic to portrait sprite by keeping the same center
-		new_runner.x = this.mGRunner.x;
-		new_runner.y = this.mGRunner.y;
+		let previous_runner = this.mGRunner;
+		switch( previous_runner )
+		{
+			case this.mGRunners.top:
+			case this.mGRunners.bottom:
+				new_runner.x = this.mGRunner.x;
+				new_runner.y = this.mGRunner.y;
+				break;
+			case this.mGRunners.right:
+			case this.mGRunners.left:
+				new_runner.x = previous_runner.x + previous_runner.getBounds().width / 2 - new_runner.getBounds().width / 2;
+				new_runner.y = previous_runner.y + previous_runner.getBounds().height / 2 - new_runner.getBounds().height / 2;
+				break;
+		}
 		this.mGRunner = new_runner;
+
+		this.GotoTop( 0 ); // To recompute the position to not have a part inside the wall
 	}
 	StartMoveRight()
 	{
 		let new_runner = this.mGRunners.right;
-		new_runner.x = this.mGRunner.x;
-		new_runner.y = this.mGRunner.y;
+		let previous_runner = this.mGRunner;
+		switch( previous_runner )
+		{
+			case this.mGRunners.top:
+			case this.mGRunners.bottom:
+				new_runner.x = previous_runner.x + previous_runner.getBounds().width / 2 - new_runner.getBounds().width / 2;
+				new_runner.y = previous_runner.y + previous_runner.getBounds().height / 2 - new_runner.getBounds().height / 2;
+				break;
+			case this.mGRunners.right:
+			case this.mGRunners.left:
+				new_runner.x = this.mGRunner.x;
+				new_runner.y = this.mGRunner.y;
+				break;
+		}
 		this.mGRunner = new_runner;
+
+		this.GotoRight( 0 );
 	}
 	StartMoveBottom()
 	{
 		let new_runner = this.mGRunners.bottom;
-		new_runner.x = this.mGRunner.x;
-		new_runner.y = this.mGRunner.y;
+		let previous_runner = this.mGRunner;
+		switch( previous_runner )
+		{
+			case this.mGRunners.top:
+			case this.mGRunners.bottom:
+				new_runner.x = this.mGRunner.x;
+				new_runner.y = this.mGRunner.y;
+				break;
+			case this.mGRunners.right:
+			case this.mGRunners.left:
+				new_runner.x = previous_runner.x + previous_runner.getBounds().width / 2 - new_runner.getBounds().width / 2;
+				new_runner.y = previous_runner.y + previous_runner.getBounds().height / 2 - new_runner.getBounds().height / 2;
+				break;
+		}
 		this.mGRunner = new_runner;
+
+		this.GotoBottom( 0 );
 	}
 	StartMoveLeft()
 	{
 		let new_runner = this.mGRunners.left;
-		new_runner.x = this.mGRunner.x;
-		new_runner.y = this.mGRunner.y;
+		let previous_runner = this.mGRunner;
+		switch( previous_runner )
+		{
+			case this.mGRunners.top:
+			case this.mGRunners.bottom:
+				new_runner.x = previous_runner.x + previous_runner.getBounds().width / 2 - new_runner.getBounds().width / 2;
+				new_runner.y = previous_runner.y + previous_runner.getBounds().height / 2 - new_runner.getBounds().height / 2;
+				break;
+			case this.mGRunners.right:
+			case this.mGRunners.left:
+				new_runner.x = this.mGRunner.x;
+				new_runner.y = this.mGRunner.y;
+				break;
+		}
 		this.mGRunner = new_runner;
+
+		this.GotoLeft( 0 );
 	}
 
 	GotoTop( /*number*/ iStep )
