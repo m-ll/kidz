@@ -36,7 +36,8 @@ class cApp extends cCoreApp
 	{
 		super.Init( iConfig, iCanvasId );
 
-		this.mFaf = new cFaf( 'Welcome ...' );
+		this.mFaf = new cFaf();
+		this.mFaf.Init();
 		
 		this.mAssets = new cAssets();
 		this.mAssets.Init( this.Config() );
@@ -54,6 +55,8 @@ class cApp extends cCoreApp
 	Start()
 	{
 		super.Start();
+
+		this.mFaf.Build( this.Stage() );
 
 		let ui = new cFafUI( this.mFaf, this.Stage(), this._Assets, this );
 		ui.Init();

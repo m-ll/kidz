@@ -17,9 +17,12 @@ class cFafUI extends cUI
 	{
 		super( iStage, null, iNextCB, iNextCBData );
 
-		         /*cFaf*/ this.mFaf = iFaf;
-		/*createjs.Text*/ this.mGWelcome = null;
-		       /*object*/ this.mListener = null;
+					/*cFaf*/ this.mFaf = iFaf;
+					
+		   /*createjs.Text*/ this.mGLetter = null;
+		  /*createjs.Tween*/ this.mGTween = null;
+
+		          /*object*/ this.mListener = null;
 	}
 	
 // public
@@ -32,18 +35,21 @@ class cFafUI extends cUI
 	{
 		super.Build();
 
-		this.mGWelcome = new createjs.Text( this.mFaf.GetText(), 'bold 20px Arial', '#000000' );
-		this.mGWelcome.textAlign = 'center';
-		this.mGWelcome.textBaseline = 'middle';
-		this.mGWelcome.x = this.Stage().canvas.width / 2;
-		this.mGWelcome.y = 0;
+		//---
 
-		this.Stage().addChild( this.mGWelcome );
+		this.mGLetter = this.mFaf.GetGLetters()[0];
+		this.mGTween = this.mFaf.GetGTweens()[0];
+
+		this.Stage().addChild( this.mGLetter );
+		this.mListener = this.mGTween.on( 'complete', this._EndAnimation, this );
+		this.mGTween.gotoAndPlay();
 	}
 	
 	Start()
 	{
 		super.Start();
+		
+		this.Stage().canvas.style.backgroundColor = 'rgb( 0, 0, 0 )';
 
 		createjs.Ticker.timingMode = createjs.Ticker.RAF;
 		this.mListener = createjs.Ticker.on( 'tick', this._Tick, this );
@@ -53,22 +59,36 @@ class cFafUI extends cUI
 	_Stop()
 	{
 		createjs.Ticker.off( 'tick', this.mListener );
+		this.Stage().removeAllChildren();
 		
+		this.Stage().canvas.style.backgroundColor = '';
+
 		super._Stop();
+	}
+	
+	_EndAnimation()
+	{
+		this.mGTween.gotoAndStop();
+		// this.Stage().removeChild( this.mGLetter ); // Commented to keep the letter displayed
+		
+		this.mGTween.off( 'complete', this.mListener );
+
+		this.mGLetter = this.mFaf.NextGLetter( this.mGLetter );
+		this.mGTween = this.mFaf.NextGTween( this.mGTween );
+
+		if( !this.mGLetter )
+		{
+			this._Stop();
+			return;
+		}
+
+		this.Stage().addChild( this.mGLetter );
+		this.mListener = this.mGTween.on( 'complete', this._EndAnimation, this );
+		this.mGTween.gotoAndPlay();
 	}
 	
 	_Tick( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
-		this.mGWelcome.y += 10;
-
-		if( this.mGWelcome.y > this.Stage().canvas.height / 2 )
-		{
-			this.Stage().removeChild( this.mGWelcome );
-
-			iEvent.remove();
-			this._Stop();
-		}
-
 		this.Stage().update( iEvent );
 	}
 }
