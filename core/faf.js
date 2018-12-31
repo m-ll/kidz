@@ -19,8 +19,6 @@ class cFaf /* F(irst) A(nd) F(oremost): before assets loaded */
 		          /*string*/ this.mText = 'm-ll';
 		 /*createjs.Text[]*/ this.mGLetters = [];
 		/*createjs.Tween[]*/ this.mGTweens = [];
-
-				  /*object*/ this.mLetterOutside = {};
 	}
 	
 // public
@@ -68,7 +66,6 @@ class cFaf /* F(irst) A(nd) F(oremost): before assets loaded */
 		this.mHeight = iStage.canvas.height;
 
 		this._BuildLetters();
-		this._ComputeInfo();
 		this._BuildTweens();
 	}
 	
@@ -83,28 +80,26 @@ class cFaf /* F(irst) A(nd) F(oremost): before assets loaded */
 			this.mGLetters.push( text );
 		});
 	}
-	_ComputeInfo()
-	{
-		let max_width = Math.max( ...this.mGLetters.map( letter => letter.getBounds().width ), 0 );
-		let max_height = Math.max( ...this.mGLetters.map( letter => letter.getBounds().height ), 0 );
-		
-		this.mLetterOutside.top = 0 - max_height / 2;
-		this.mLetterOutside.bottom = this.mHeight + max_height / 2;
-		this.mLetterOutside.left = 0 - max_width / 2;
-		this.mLetterOutside.right = this.mWidth - max_width / 2;
-	}
 
 	/*number*/
-	_Compute( /*string|number*/ iPos, /*number*/ iSize )
+	_Compute( /*string|number*/ iPos, /*createjs.Text*/ iLetter, /*number*/ iSize )
 	{
+		let max_width = iLetter.getBounds().width;
+		let max_height = iLetter.getBounds().height;
+		
+		let outside_top = 0 - max_height / 2;
+		let outside_bottom = this.mHeight + max_height / 2;
+		let outside_left = 0 - max_width / 2;
+		let outside_right = this.mWidth - max_width / 2;
+
 		if( iPos === 'oleft' )
-			return this.mLetterOutside.left;
+			return outside_left;
 		else if( iPos === 'oright' )
-			return this.mLetterOutside.right;
+			return outside_right;
 		else if( iPos === 'otop' )
-			return this.mLetterOutside.top;
+			return outside_top;
 		else if( iPos === 'obottom' )
-			return this.mLetterOutside.bottom;
+			return outside_bottom;
 		else
 			return iPos * iSize;
 	}
@@ -115,21 +110,17 @@ class cFaf /* F(irst) A(nd) F(oremost): before assets loaded */
 		
 		let tweens = 
 		[
-			{ 'from': { 'x': this._Compute( 'oleft' ),            'y': this._Compute( 0.8, this.mHeight ) }, 
-				'to': { 'x': this._Compute( 0.42, this.mWidth ),  'y': this._Compute( 0.5, this.mHeight ) } },
-			{ 'from': { 'x': this._Compute( 0.1, this.mWidth ),   'y': this._Compute( 'otop' ) }, 
-				'to': { 'x': this._Compute( 0.47, this.mWidth ),  'y': this._Compute( 0.5, this.mHeight ) } },
-			{ 'from': { 'x': this._Compute( 0.7, this.mWidth ),   'y': this._Compute( 'otop' ) }, 
-				'to': { 'x': this._Compute( 0.52, this.mWidth ),  'y': this._Compute( 0.5, this.mHeight ) } },
-			{ 'from': { 'x': this._Compute( 'oright' ),           'y': this._Compute( 0.7, this.mHeight ) }, 
-				'to': { 'x': this._Compute( 0.57, this.mWidth ),  'y': this._Compute( 0.5, this.mHeight ) } }
+			{ 'from': { 'x': 'oleft',  'y': Math.random()      }, 'to': { 'x': 0.42, 'y': 0.50 } },
+			{ 'from': { 'x': Math.random(),     'y': 'otop'    }, 'to': { 'x': 0.47, 'y': 0.50 } },
+			{ 'from': { 'x': Math.random(),     'y': 'obottom' }, 'to': { 'x': 0.52, 'y': 0.50 } },
+			{ 'from': { 'x': 'oright', 'y': Math.random()      }, 'to': { 'x': 0.57, 'y': 0.50 } }
 		];
 		
 		this.mGLetters.forEach( ( letter, index ) => 
 		{
 			let index_tween = index % tweens.length;
-			let from = tweens[index_tween].from;
-			let to = tweens[index_tween].to;
+			let from = { 'x': this._Compute( tweens[index_tween].from.x, letter, this.mWidth ), 'y': this._Compute( tweens[index_tween].from.y, letter, this.mHeight ) };
+			let to = { 'x': this._Compute( tweens[index_tween].to.x, letter, this.mWidth ), 'y': this._Compute( tweens[index_tween].to.y, letter, this.mHeight ) };
 
 			letter.x = from.x;
 			letter.y = from.y;
