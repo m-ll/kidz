@@ -77,19 +77,37 @@ class cApp extends cCoreApp
 	
 	_Game()
 	{
-		this.mGame.Init( this.mAssets, this.Config() );
+		this.mGame.Init( this.mAssets, this.Config(), this.mGame.GetLevel() );
 
-		let ui = new cGameUI( this.mGame, this.Stage(), this.mAssets, this._Win, this );
+		let ui = new cGameUI( this.mGame, this.Stage(), this.mAssets, this._Win, this._Lose, this._NextLevel, this );
 		ui.Init();
 		ui.Build();
 		ui.Start();
 	}
 
+	_NextLevel()
+	{
+		let level = this.mGame.GetLevel();
+		level++;
+		this.mGame.SetLevel( level );
+
+		this._Game();
+	}
+	_Lose()
+	{
+		this._Game();
+	}
 	_Win()
 	{
-		let ui = new cWinUI( this.mWin, this.Stage(), this.mAssets, this._Game, this );
+		let ui = new cWinUI( this.mWin, this.Stage(), this.mAssets, this._PlayAgain, this );
 		ui.Init();
 		ui.Build();
 		ui.Start();
+	}
+	_PlayAgain()
+	{
+		this.mGame.SetLevel( 0 );
+
+		this._Game();
 	}
 }

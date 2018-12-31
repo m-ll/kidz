@@ -14,17 +14,13 @@ import { cUI } from '../core/ui.js';
 export 
 class cGameUI extends cUI
 {
-	constructor( /*cGame*/ iGame, /*createjs.Stage*/ iStage, /*cAssets*/ iAssets, /*function*/ iNextCB, /*object*/ iNextCBData )
+	constructor( /*cGame*/ iGame, /*createjs.Stage*/ iStage, /*cAssets*/ iAssets, /*function*/ iNextWinCB, /*function*/ iNextLoseCB, /*function*/ iNextLevelCB, /*object*/ iNextCBData )
 	{
-		super( iStage, iAssets, iNextCB, iNextCBData );
+		super( iStage, iAssets, { 'win': iNextWinCB, 'lose': iNextLoseCB, 'next': iNextLevelCB }, iNextCBData );
 
-		  /*cGame*/ this.mGame = iGame;
+		   /*cGame*/ this.mGame = iGame;
 
-		 /*object*/ this.mListener = null;
-		/*boolean*/ this.mTopHeld = false;
-		/*boolean*/ this.mRightHeld = false;
-		/*boolean*/ this.mBottomHeld = false;
-		/*boolean*/ this.mLeftHeld = false;
+		  /*object*/ this.mListener = null;
 		/*number[]*/ this.mHelds = [];
 	}
 	
@@ -59,15 +55,26 @@ class cGameUI extends cUI
 // private
 	_Stop()
 	{
+		createjs.Ticker.off( 'tick', this.mListener );
+		
 		this.mGame.GetGRunner().stop();
 		this.mGame.GetGGoal().stop();
 
-		// It's commented to keep all stuff displayed during the win screen
-		// this.Stage().removeAllChildren();
+		if( this.mGame.GetState() === cGame.eState.kNextLevel )
+		{
+			this.Stage().removeAllChildren();
+			super._Stop( 'next' );
+		}
+		else if( this.mGame.GetState() === cGame.eState.kWin )
+		{
+			super._Stop( 'win' );
+		}
+		else //if( this.mGame.GetState() === cGame.eState.kLose )
+		{
+			super._Stop( 'lose' );
+		}
 
-		createjs.Ticker.off( 'tick', this.mListener );
-		
-		super._Stop();
+		// super._Stop();
 	}
 	
 	// https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key
@@ -159,6 +166,8 @@ class cGameUI extends cUI
 			this.mGame.SetState( cGame.eState.kWin );
 		if( this.mGame.Lose() )
 			this.mGame.SetState( cGame.eState.kLose );
+		if( this.mGame.NextLevel() )
+			this.mGame.SetState( cGame.eState.kNextLevel );
 
 		switch( this.mGame.GetState() )
 		{
@@ -212,6 +221,9 @@ class cGameUI extends cUI
 				this.mGame.SetState( cGame.eState.kStartIdle );
 				break;
 
+			case cGame.eState.kNextLevel:
+				this._Stop();
+				break;
 			case cGame.eState.kWin:
 				this._Stop();
 				break;

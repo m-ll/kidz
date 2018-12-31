@@ -46,8 +46,14 @@ class cUI
 	}
 	
 // protected
-	_Stop()
+	_Stop( /*string*/ iNext )
 	{
-		this.mNextCB.call( this.mNextCBData );
+		if( !iNext )
+		{
+			this.mNextCB.call( this.mNextCBData );
+			return;
+		}
+
+		this.mNextCB[iNext].call( this.mNextCBData );
 	}
 }

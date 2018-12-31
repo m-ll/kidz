@@ -55,7 +55,7 @@ class cAssets extends cCoreAssets
 	{
 		this.mSFlip = this.GetAsset( 'flip' ).sound;
 		this.mGBack = this.GetAsset( 'back' ).graphic;
-		this.mGCards = this.GetAssetsStartWith( 'card-' );
+		this.mGCards = this.GetAssetsStartWith( 'card-' ).map( asset => asset.graphic );
 
 		super._Finish();
 	}

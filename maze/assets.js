@@ -17,17 +17,17 @@ class cAssets extends cCoreAssets
 	{
 		super();
 
-		/*createjs.Bitmap*/ this.mGBackground = null;
+		/*createjs.Bitmap[]*/ this.mGBackgrounds = null;
 		/*createjs.Bitmap[]*/ this.mGRunners = { 'top': null, 'right': null, 'bottom': null, 'left': null };
-		/*createjs.Bitmap*/ this.mGGoal = null;
-		/*createjs.Bitmap*/ this.mGTrap = null;
+		  /*createjs.Bitmap*/ this.mGGoal = null;
+		  /*createjs.Bitmap*/ this.mGTrap = null;
 	}
 	
 // public
 	/*createjs.Bitmap*/
-	GetGBackground()
+	GetGBackgrounds()
 	{
-		return this.mGBackground;
+		return this.mGBackgrounds;
 	}
 	/*createjs.Bitmap*/
 	GetGRunners()
@@ -59,7 +59,7 @@ class cAssets extends cCoreAssets
 // private
 	_Finish()
 	{
-		this.mGBackground = this.GetAsset( 'background' ).graphic;
+		this.mGBackgrounds = this.GetAssetsStartWith( 'background-' ).map( asset => asset.graphic );
 		// Must be the same order as eDirection
 		this.mGRunners.top = this.GetAsset( 'runner-to-top' ).graphic;
 		this.mGRunners.right = this.GetAsset( 'runner-to-right' ).graphic;

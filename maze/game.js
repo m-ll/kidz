@@ -27,14 +27,14 @@ class cMaze
 	}
 
 	/*createjs.Bitmap*/
-	Init( /*createjs.Bitmap[4]*/ iRunners, /*createjs.Bitmap*/ ioGoal, /*json*/ iConfig )
+	Init( /*createjs.Bitmap[4]*/ iRunners, /*createjs.Bitmap*/ ioGoal, /*json*/ iConfig, /*number*/ iLevel )
 	{
 		this.mTiles = [];
-		this.mTileSize = iConfig.tilesize;
+		this.mTileSize = iConfig.mazes[iLevel].tilesize;
 
 		let runner = null;
 
-		let maze = iConfig.maze;
+		let maze = iConfig.mazes[iLevel].maze;
 		maze.forEach( ( line, y ) => {
 			let last_line = [];
 
@@ -143,27 +143,33 @@ class cGame
 {
 	constructor()
 	{
-			      /*cMaze*/ this.mMaze = new cMaze();
+					 /*cMaze*/ this.mMaze = new cMaze();
+					/*number*/ this.mLevel = 0;
+					/*number*/ this.mLevelMax = 0;
 			   
-		/*createjs.Bitmap*/ this.mGBackground = null;
-		/*createjs.Bitmap*/ this.mGRunner = null;
+		   /*createjs.Bitmap*/ this.mGBackground = null;
+		   /*createjs.Bitmap*/ this.mGRunner = null;
 		/*createjs.Bitmap[4]*/ this.mGRunners = { 'top': null, 'right': null, 'bottom': null, 'left': null };
-		/*createjs.Bitmap*/ this.mGGoal = null;
+		   /*createjs.Bitmap*/ this.mGGoal = null;
 
-		   /*cGame.eState*/ this.mState = cGame.eState.kStartIdle;
+		      /*cGame.eState*/ this.mState = cGame.eState.kStartIdle;
 	}
 	
 // public
 	static 
-	get eState()
+	get eState() //TODO: move it to game-ui ?
 	{
 		return {
+				// Idle
 				kStartIdle: 'start-idle',
 				kIdle: 'idle',
 				kStopIdle: 'stop-idle',
+				// Move
 				kStartMove: 'start-move',
 				kMove: 'move',
 				kStopMove: 'stop-move',
+				// End
+				kNextLevel: 'next-level',
 				kWin: 'win',
 				kLose: 'lose'
 				};
@@ -185,6 +191,16 @@ class cGame
 	{
 		return this.mGGoal;
 	}
+	
+	/*number*/
+	GetLevel()
+	{
+		return this.mLevel;
+	}
+	SetLevel( /*number*/ iLevel )
+	{
+		this.mLevel = iLevel;
+	}	
 
 	/*cGame.eState*/
 	GetState()
@@ -196,15 +212,17 @@ class cGame
 		this.mState = iState;
 	}
 	
-	Init( /*cAssets*/ iAssets, /*json*/ iConfig )
+	Init( /*cAssets*/ iAssets, /*json*/ iConfig, /*number*/ iLevel )
 	{
 		this.mState = cGame.eState.kStartIdle;
-		
-		this.mGBackground = iAssets.GetGBackground(); //TODO: maybe clone ?
+		this.mLevel = iLevel;
+
+		this.mGBackground = iAssets.GetGBackgrounds()[this.mLevel];
 		this.mGGoal = iAssets.GetGGoal();
 		this.mGRunners = iAssets.GetGRunners();
 
-		this.mGRunner = this.mMaze.Init( this.mGRunners, this.mGGoal, iConfig );
+		this.mLevelMax = iConfig.mazes.length - 1;
+		this.mGRunner = this.mMaze.Init( this.mGRunners, this.mGGoal, iConfig, this.mLevel );
 	}
 	
 	StartMoveTop()
@@ -335,6 +353,12 @@ class cGame
 			new_x = tiles.topleft.x2 + 1;
 		
 		this.mMaze.SetPosition( this.mGRunner, new_x, new_y );
+	}
+
+	/*boolean*/
+	NextLevel()
+	{
+		return this.Win() && this.mLevel < this.mLevelMax;
 	}
 
 	/*boolean*/
