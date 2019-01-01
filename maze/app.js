@@ -58,7 +58,13 @@ class cApp extends cCoreApp
 	Start()
 	{
 		super.Start();
-		
+
+		this._Faf();
+	}
+	
+// private
+	_Faf()
+	{
 		this.mFaf.Build( this.Stage() );
 
 		let ui = new cFafUI( this.mFaf, this.Stage(), this._Assets, this );
@@ -66,8 +72,7 @@ class cApp extends cCoreApp
 		ui.Build();
 		ui.Start();
 	}
-	
-// private
+
 	_Assets()
 	{
 		this.mAssets.Load();
