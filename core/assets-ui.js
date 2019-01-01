@@ -17,7 +17,10 @@ class cAssetsUI extends cUI
 	{
 		super( iStage, iAssets, iNextCB, iNextCBData );
 
-		/*createjs.Container*/ this.mGProgress = null;
+		    /*createjs.Shape*/ this.mGBar = null;
+		     /*createjs.Text*/ this.mGText = null;
+		/*createjs.Container*/ this.mGProgressBar = null;
+		            /*number*/ this.mGProgressBarSize = { 'width': 600, 'height': 50 };
 					/*object*/ this.mListener = null;
 	}
 	
@@ -31,7 +34,7 @@ class cAssetsUI extends cUI
 	{
 		super.Build();
 
-		this._BuildProgress();
+		this._BuildProgressBar();
 	}
 	
 	Start()
@@ -50,31 +53,41 @@ class cAssetsUI extends cUI
 		super._Stop();
 	}
 	
-	_BuildProgress()
+	_BuildProgressBar()
 	{
-		let gprogress = new createjs.Shape();
-		gprogress.graphics.beginFill( 'rgba( 255, 0, 0, 0.75 )' ).drawRect( 0, 0, 1, 40 ).endFill();
+		this.mGBackground = new createjs.Shape();
+		this.mGBackground.graphics.beginFill( 'rgba( 255, 0, 0, 0.5 )' ).drawRect( 0, 0, this.mGProgressBarSize.width, this.mGProgressBarSize.height ).endFill();
+		
+		this.mGBar = new createjs.Shape();
+		this.mGBar.graphics.beginFill( 'rgba( 255, 0, 0, 0.9 )' ).drawRect( 0, 0, 1, this.mGProgressBarSize.height ).endFill();
+		
+		this.mGText = new createjs.Text( '0%', 'bold 20px Arial', '#000000' );
+		this.mGText.textAlign = 'center';
+		this.mGText.textBaseline = 'middle';
+		this.mGText.x = this.mGProgressBarSize.width / 2;
+		this.mGText.y = this.mGProgressBarSize.height / 2;
 
 		// To be able to use scaleX on its child without scaling x/y of the container
-		this.mGProgress = new createjs.Container();
-		this.mGProgress.addChild( gprogress );
+		this.mGProgressBar = new createjs.Container();
+		this.mGProgressBar.addChild( this.mGBackground, this.mGBar, this.mGText );
 
-		this.mGProgress.x = this.Stage().canvas.width / 2 - 600 / 2;
-		this.mGProgress.y = this.Stage().canvas.height / 2 - 40 / 2;
+		this.mGProgressBar.x = this.Stage().canvas.width / 2 - this.mGProgressBarSize.width / 2;
+		this.mGProgressBar.y = this.Stage().canvas.height / 2 - this.mGProgressBarSize.height / 2;
 
-		this.Stage().addChild( this.mGProgress );
+		this.Stage().addChild( this.mGProgressBar );
 	}
 
 	_Tick( /*createjs.Event*/ iEvent, /*object*/ iData )
 	{
+		let progress = this.Assets()._GetProgress();
+		this.mGBar.scaleX = progress * this.mGProgressBarSize.width;
+		let progress_100 = Math.floor( progress * 100 );
+		this.mGText.text = `${progress_100}%`;
+
 		if( this.Assets().IsCompleted() )
 		{
 			iEvent.remove();
 			this._Stop();
-		}
-		else
-		{
-			this.mGProgress.getChildAt( 0 ).scaleX = this.Assets()._GetProgress() * 600;
 		}
 
 		this.Stage().update( iEvent );
