@@ -17,6 +17,8 @@ import { cGame } from './game.js';
 import { cGameUI } from './game-ui.js';
 import { cWin } from '../core/win.js';
 import { cWinUI } from '../core/win-ui.js';
+import { cLose } from '../core/lose.js';
+import { cLoseUI } from '../core/lose-ui.js';
 
 export 
 class cApp extends cCoreApp
@@ -45,6 +47,7 @@ class cApp extends cCoreApp
 		this.mGame = new cGame();
 		
 		this.mWin = new cWin( 'You win !?!', 'Play again ?!?' );
+		this.mLose = new cLose( 'You lose !?!', 'Retry ?!?' );
 	}
 	
 	Build()
@@ -94,6 +97,13 @@ class cApp extends cCoreApp
 		this._Game();
 	}
 	_Lose()
+	{
+		let ui = new cLoseUI( this.mLose, this.Stage(), this.mAssets, this._Retry, this );
+		ui.Init();
+		ui.Build();
+		ui.Start();
+	}
+	_Retry()
 	{
 		this._Game();
 	}

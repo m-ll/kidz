@@ -22,17 +22,19 @@ class cMaze
 	{
 		return {
 				kWall: 'wall',
-				kSpace: 'space'
+				kSpace: 'space',
+				kTrap: 'trap'
 				};
 	}
 
-	/*createjs.Bitmap*/
-	Init( /*createjs.Bitmap[4]*/ iRunners, /*createjs.Bitmap*/ ioGoal, /*json*/ iConfig, /*number*/ iLevel )
+	/*{createjs.Bitmap,createjs.Bitmap[]}*/
+	Init( /*createjs.Bitmap[4]*/ iRunners, /*createjs.Bitmap*/ ioGoal, /*createjs.Bitmap*/ iTrap, /*json*/ iConfig, /*number*/ iLevel )
 	{
 		this.mTiles = [];
 		this.mTileSize = iConfig.mazes[iLevel].tilesize;
 
 		let runner = null;
+		let traps = [];
 
 		let maze = iConfig.mazes[iLevel].maze;
 		maze.forEach( ( line, y ) => {
@@ -44,15 +46,15 @@ class cMaze
 				switch( letter )
 				{
 					case '#': last_line.push( cMaze.eTileType.kWall ); break;
-					default:
-					case ' ': last_line.push( cMaze.eTileType.kSpace ); break;
+					case 't': last_line.push( cMaze.eTileType.kTrap ); break;
 
 					case '^': 
 					case '>': 
 					case 'v': 
-					case '<': last_line.push( cMaze.eTileType.kSpace ); break;
-
-					case 'x': last_line.push( cMaze.eTileType.kSpace ); break;
+					case '<': 
+					case 'x':
+					default:
+					case ' ': last_line.push( cMaze.eTileType.kSpace ); break;
 				}
 
 				switch( letter )
@@ -85,13 +87,24 @@ class cMaze
 						ioGoal.y = this._Index2Pixel( y ) + this.mTileSize / 2 - height / 2;
 					}
 					break;
+					
+					case 't': 
+					{
+						let trap = iTrap.clone();
+						let width = trap.getBounds().width;
+						let height = trap.getBounds().height;
+						trap.x = this._Index2Pixel( x ) + this.mTileSize / 2 - width / 2; 
+						trap.y = this._Index2Pixel( y ) + this.mTileSize / 2 - height / 2;
+						traps.push( trap );
+					}
+					break;
 				}
 			});
 
 			this.mTiles.push( last_line );
 		});
 
-		return runner;
+		return { 'runner': runner, 'traps': traps };
 	}
 
 	/*object*/
@@ -151,6 +164,7 @@ class cGame
 		   /*createjs.Bitmap*/ this.mGRunner = null;
 		/*createjs.Bitmap[4]*/ this.mGRunners = { 'top': null, 'right': null, 'bottom': null, 'left': null };
 		   /*createjs.Bitmap*/ this.mGGoal = null;
+		 /*createjs.Bitmap[]*/ this.mGTraps = [];
 
 		      /*cGame.eState*/ this.mState = cGame.eState.kStartIdle;
 	}
@@ -191,6 +205,11 @@ class cGame
 	{
 		return this.mGGoal;
 	}
+	/*createjs.Bitmap[]*/
+	GetGTraps()
+	{
+		return this.mGTraps;
+	}
 	
 	/*number*/
 	GetLevel()
@@ -222,7 +241,9 @@ class cGame
 		this.mGRunners = iAssets.GetGRunners();
 
 		this.mLevelMax = iConfig.mazes.length - 1;
-		this.mGRunner = this.mMaze.Init( this.mGRunners, this.mGGoal, iConfig, this.mLevel );
+		let runner_traps = this.mMaze.Init( this.mGRunners, this.mGGoal, iAssets.GetGTrap(), iConfig, this.mLevel );
+		this.mGRunner = runner_traps.runner;
+		this.mGTraps = runner_traps.traps;
 	}
 	
 	StartMoveTop()
@@ -316,7 +337,7 @@ class cGame
 		let new_y = this.mGRunner.y - iStep;
 
 		let tiles = this.mMaze.GetTiles( this.mGRunner, new_x, new_y );
-		if( tiles.topleft.type !== cMaze.eTileType.kSpace || tiles.topright.type !== cMaze.eTileType.kSpace )
+		if( tiles.topleft.type === cMaze.eTileType.kWall || tiles.topright.type === cMaze.eTileType.kWall )
 			new_y = tiles.topleft.y2 + 1;
 		
 		this.mMaze.SetPosition( this.mGRunner, new_x, new_y );
@@ -327,7 +348,7 @@ class cGame
 		let new_y = this.mGRunner.y;
 
 		let tiles = this.mMaze.GetTiles( this.mGRunner, new_x, new_y );
-		if( tiles.topright.type !== cMaze.eTileType.kSpace || tiles.bottomright.type !== cMaze.eTileType.kSpace )
+		if( tiles.topright.type === cMaze.eTileType.kWall || tiles.bottomright.type === cMaze.eTileType.kWall )
 			new_x = tiles.topright.x1 - this.mGRunner.getBounds().width;
 		
 		this.mMaze.SetPosition( this.mGRunner, new_x, new_y );
@@ -338,7 +359,7 @@ class cGame
 		let new_y = this.mGRunner.y + iStep;
 
 		let tiles = this.mMaze.GetTiles( this.mGRunner, new_x, new_y );
-		if( tiles.bottomleft.type !== cMaze.eTileType.kSpace || tiles.bottomright.type !== cMaze.eTileType.kSpace )
+		if( tiles.bottomleft.type === cMaze.eTileType.kWall || tiles.bottomright.type === cMaze.eTileType.kWall )
 			new_y = tiles.bottomleft.y1 - this.mGRunner.getBounds().height;
 		
 		this.mMaze.SetPosition( this.mGRunner, new_x, new_y );
@@ -349,7 +370,7 @@ class cGame
 		let new_y = this.mGRunner.y;
 
 		let tiles = this.mMaze.GetTiles( this.mGRunner, new_x, new_y );
-		if( tiles.topleft.type !== cMaze.eTileType.kSpace || tiles.bottomleft.type !== cMaze.eTileType.kSpace )
+		if( tiles.topleft.type === cMaze.eTileType.kWall || tiles.bottomleft.type === cMaze.eTileType.kWall )
 			new_x = tiles.topleft.x2 + 1;
 		
 		this.mMaze.SetPosition( this.mGRunner, new_x, new_y );
@@ -382,7 +403,28 @@ class cGame
 	/*boolean*/
 	Lose()
 	{
-		// return this.mMaze.GetRunnerX() === this.mMaze.GetTrapX();
-		return false;
+		let runner_x1 = this.mGRunner.x;
+		let runner_x2 = this.mGRunner.x + this.mGRunner.getBounds().width - 1;
+		let runner_y1 = this.mGRunner.y;
+		let runner_y2 = this.mGRunner.y + this.mGRunner.getBounds().height - 1;
+
+		return this.mGTraps.some( trap => 
+		{
+			let trap_x1 = trap.x;
+			let trap_x2 = trap.x + trap.getBounds().width - 1;
+			let trap_y1 = trap.y;
+			let trap_y2 = trap.y + trap.getBounds().height - 1;
+	
+			if( runner_x2 < trap_x1 )
+				return false;
+			if( runner_x1 > trap_x2 )
+				return false;
+			if( runner_y2 < trap_y1 )
+				return false;
+			if( runner_y1 > trap_y2 )
+				return false;
+				
+			return true;
+		});
 	}
 }

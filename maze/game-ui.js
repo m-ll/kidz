@@ -35,11 +35,14 @@ class cGameUI extends cUI
 	
 	Build()
 	{
+		this.Stage().removeAllChildren();
+		
 		super.Build();
 
 		this.Stage().addChild( this.mGame.GetGBackground() );
 		this.Stage().addChild( this.mGame.GetGGoal() );
 		this.Stage().addChild( this.mGame.GetGRunner() );
+		this.mGame.GetGTraps().forEach( trap => this.Stage().addChild( trap ) );
 	}
 	
 	Start()
@@ -62,7 +65,6 @@ class cGameUI extends cUI
 
 		if( this.mGame.GetState() === cGame.eState.kNextLevel )
 		{
-			this.Stage().removeAllChildren();
 			super._Stop( 'next' );
 		}
 		else if( this.mGame.GetState() === cGame.eState.kWin )
